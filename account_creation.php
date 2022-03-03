@@ -10,7 +10,7 @@ if($connection){
     $encryption_key_ = base64_encode($encryption_key);
 
     $account_name_encryption = openssl_encrypt($account_name, $ciphering, $ed_key, 0, $ed_iv);
-    $full_name = addslashes($_POST["full_name"]);
+    $full_name = "Ugonna Chimezie";
     $full_name_split = explode(" ", $full_name);
     if(count($full_name_split) > 1){
         $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
@@ -19,7 +19,7 @@ if($connection){
         $first_name = "";
         $last_name = "";
     }
-    $email = openssl_encrypt(addslashes($_POST["email"]), $ciphering, $encryption_key, 0, $encryption_iv);
+    $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
 
     $alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $code = array();
@@ -28,7 +28,7 @@ if($connection){
     }
     $user_id = $code[0] . $code[1] . $code[2];
 
-    $password = openssl_encrypt(addslashes($_POST["password"]), $ciphering, $encryption_key, 0, $encryption_iv);
+    $password = openssl_encrypt("12345abcde", $ciphering, $encryption_key, 0, $encryption_iv);
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
     $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
 
