@@ -31,7 +31,7 @@ if($connection){
     }
     $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
 
-    $user_id = "jzbjxjzhxjh";//generate_user_id($pdo);
+    $user_id = generate_user_id($pdo);
 
     $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
     $time_zone = "Africa/Lagos";
@@ -66,7 +66,7 @@ function generate_user_id($pdo){
     $statement->execute(array($user_id));
     $result = $statement->setFetchMode(PDO::FETCH_ASSOC);
     if($result > 0){
-        generate_user_id($pdo);
+        echo "used before";
     }else{
         return $user_id;
     }
