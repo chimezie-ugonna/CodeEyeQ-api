@@ -1,9 +1,10 @@
 <?php
 require "database_connection.php";
-date_default_timezone_set('Africa/Lagos');
 $status = array();
 if($connection){
-    $ciphering = "AES-128-CTR";
+    $user_id = generate_user_id();
+    echo "User Id" . $user_id;
+    /*$ciphering = "AES-128-CTR";
     $encryption_iv = (string)rand(1000000000000000,9999999999999999);
     $encryption_key = (string)rand(1000000000000000,9999999999999999);
     $encryption_iv_ = base64_encode($encryption_iv);
@@ -32,6 +33,27 @@ if($connection){
     }
     $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
 
+    $user_id = generate_user_id();
+
+    $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
+    $time_zone = "Africa/Lagos";
+    date_default_timezone_set($time_zone);
+    $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
+    $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
+
+    $query = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created, time_zone) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $statement = $pdo->prepare($query);
+    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time, $time_zone));*/
+
+    $status["response"] = "Done";
+}else{
+    $status["response"] = "Connection failed";
+}
+echo json_encode($status);
+$pdo = null;
+
+function generate_user_id(){
+
     $user_id = "";
     $alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $num = array();
@@ -42,17 +64,16 @@ if($connection){
         $user_id = $user_id . $num[$i];
     }
 
-    $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
-    $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
-    $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
-
-    $sql = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $statement = $pdo->prepare($sql);
-    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, "; delete from users;"));
-
-    $result = $statement->fetchAll();
-}else{
-    $status["response"] = "connection failed";
+    $user_id = "M1Y2M6V7G6I0K4Q2V6G4E7T5";
+    $query = "select * from users where user_id = ?";
+    $statement = $pdo->prepare($query);
+    $statement->execute(array($user_id));
+    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    if($result > 0){
+        echo "user id used before </br>";
+        generate_user_id();
+    }else{
+        return $user_id;
+    }
 }
-echo json_encode($status);
 ?>
