@@ -75,7 +75,7 @@ function generate_user_id($pdo){
     $query = "select * from users where user_id = ?";
     $statement = $pdo->prepare($query);
     $statement->execute(array($user_id));
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $result = $statement->setFetchMode(PDO::FETCH_ASSOC);
     if($result > 0){
         echo "user id used before </br>";
         generate_user_id();
