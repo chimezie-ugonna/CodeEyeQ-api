@@ -5,7 +5,7 @@ if($connection){
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     try {
-        $user_id = generate_user_id();
+        $user_id = generate_user_id($pdo);
         echo "User Id" . $user_id;
 
     } catch(Exception $e) {
@@ -59,7 +59,7 @@ if($connection){
 echo json_encode($status);
 $pdo = null;
 
-function generate_user_id(){
+function generate_user_id($pdo){
 
     $user_id = "";
     $alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
