@@ -10,14 +10,26 @@ if($connection){
     $encryption_key_ = base64_encode($encryption_key);
 
     $account_name_encryption = openssl_encrypt($account_name, $ciphering, $ed_key, 0, $ed_iv);
-    $full_name = "Ugonna Chimezie";
+    $full_name = "Ugonna Chimezie Collins Junior";
     $full_name_split = explode(" ", $full_name);
-    if(count($full_name_split) > 1){
+    if(count($full_name_split) > 0){
         $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
-        $last_name = openssl_encrypt($full_name_split[1], $ciphering, $encryption_key, 0, $encryption_iv);
-    }else{
-        $first_name = "";
-        $last_name = "";
+        $ln = "";
+        if(count($full_name_split) > 1){
+            for($i = 1; $i < count($full_name_split); $i++;){
+                if($i == 1){
+                    $ln = $full_name_split[$i];
+                }else{
+                    $ln = $ln . " " . $full_name_split[$i];
+                }
+            }
+        }
+        if($ln != ""){
+            $last_name = openssl_encrypt($ln, $ciphering, $encryption_key, 0, $encryption_iv);
+        }else{
+            $last_name = "";
+        }
+        echo "Last Name: " . $ln;
     }
     $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
 
@@ -28,13 +40,13 @@ if($connection){
     }
     $user_id = $code[0] . $code[1] . $code[2];
 
-    $password = openssl_encrypt("12345abcde", $ciphering, $encryption_key, 0, $encryption_iv);
+    $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
     $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
 
-    $sql = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, date_created, time_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($sql);
-    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $date, $time));
+    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time));
 
     $result = $statement->fetchAll();
 }else{
