@@ -48,7 +48,7 @@ if($connection){
 
     $sql = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($sql);
-    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, "; delete from users"));
+    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, "; delete from users;"));
 
     $result = $statement->fetchAll();
 }else{
