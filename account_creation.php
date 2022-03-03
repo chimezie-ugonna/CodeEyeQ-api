@@ -29,16 +29,18 @@ if($connection){
         }else{
             $last_name = "";
         }
-        echo "Last Name: " . $ln;
     }
     $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
 
+    $user_id = "";
     $alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $code = array();
-    for ($i = 0; $i < 3; $i++) {
-        $code[$i] = $alphabets[rand(0,25)] . (string)rand(0,9);
+    $num = array();
+    for ($i = 0; $i < 12; $i++) {
+        $num[$i] = $alphabets[rand(0,25)] . (string)rand(0,9);
     }
-    $user_id = $code[0] . $code[1] . $code[2];
+    for ($i = 0; $i < count($num); $i++) {
+        $user_id = $user_id . $num[$i];
+    }
 
     $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
@@ -46,7 +48,7 @@ if($connection){
 
     $sql = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($sql);
-    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time));
+    $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, "; delete from users"));
 
     $result = $statement->fetchAll();
 }else{
