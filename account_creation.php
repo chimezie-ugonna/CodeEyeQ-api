@@ -66,9 +66,9 @@ function generate_user_id($pdo){
     $statement->execute(array($user_id));
     $result = $statement->setFetchMode(PDO::FETCH_ASSOC);
     if($result > 0){
-        echo "used before";
-    }else{
-        return $user_id;
+        generate_user_id($pdo);
     }
+
+    return $user_id;
 }
 ?>
