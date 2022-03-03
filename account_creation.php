@@ -16,7 +16,7 @@ if($connection){
         $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
         $ln = "";
         if(count($full_name_split) > 1){
-            for($i = 1; $i < count($full_name_split); $i++;){
+            for($i = 1; $i < count($full_name_split); $i++){
                 if($i == 1){
                     $ln = $full_name_split[$i];
                 }else{
