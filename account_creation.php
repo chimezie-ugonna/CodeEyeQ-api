@@ -31,10 +31,10 @@ if($connection){
     }
     $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
 
-    $user_id = generate_user_id($pdo);
+    $user_id = "jzbjxjzhxjh";//generate_user_id($pdo);
 
     $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
-    $time_zone = 'Africa/Lagos';
+    $time_zone = "Africa/Lagos";
     date_default_timezone_set($time_zone);
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
     $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
