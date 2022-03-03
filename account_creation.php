@@ -2,8 +2,15 @@
 require "database_connection.php";
 $status = array();
 if($connection){
-    $user_id = generate_user_id();
-    echo "User Id" . $user_id;
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+    try {
+        $user_id = generate_user_id();
+        echo "User Id" . $user_id;
+
+    } catch(Exception $e) {
+        echo $e->getMessage();
+    }
     /*$ciphering = "AES-128-CTR";
     $encryption_iv = (string)rand(1000000000000000,9999999999999999);
     $encryption_key = (string)rand(1000000000000000,9999999999999999);
