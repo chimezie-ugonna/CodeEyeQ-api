@@ -8,8 +8,19 @@ if($connection){
     $encryption_iv_ = base64_encode($encryption_iv);
     $encryption_key_ = base64_encode($encryption_key);
 
-    $account_name_encryption = openssl_encrypt($account_name, $ciphering, $ed_key, 0, $ed_iv);
-    $full_name = "Ugonna Chimezie Collins Junior";
+    $user_id = addslashes($_POST["user_id"]);
+    $full_name = addslashes($_POST["full_name"]);
+    $email = addslashes($_POST["email"]);
+    $password = addslashes($_POST["password"]);
+    $device_token = addslashes($_POST["device_token"]);
+    $device_brand = addslashes($_POST["device_brand"]);
+    $device_model = addslashes($_POST["device_model"]);
+    $app_version = addslashes($_POST["app_version"]);
+    $time_zone = addslashes($_POST["time_zone"]);
+    date_default_timezone_set($time_zone);
+    $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
+    $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
+
     $full_name_split = explode(" ", $full_name);
     if(count($full_name_split) > 0){
         $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
@@ -29,19 +40,19 @@ if($connection){
             $last_name = "";
         }
     }
-    $email = openssl_encrypt("ugiezie@gmail.com", $ciphering, $encryption_key, 0, $encryption_iv);
-
-    $user_id = generate_user_id($pdo);
-
-    $password = openssl_encrypt("1234abcd", $ciphering, $encryption_key, 0, $encryption_iv);
-    $time_zone = "Africa/Lagos";
-    date_default_timezone_set($time_zone);
-    $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
-    $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
+    $email = openssl_encrypt($email, $ciphering, $encryption_key, 0, $encryption_iv);
+    $password = openssl_encrypt($password, $ciphering, $encryption_key, 0, $encryption_iv);
+    $device_brand = openssl_encrypt($device_brand, $ciphering, $encryption_key, 0, $encryption_iv);
+    $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
+    $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
 
     $query = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created, time_zone) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($query);
     $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time, $time_zone));
+
+    $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, date, time, time_zone) values (?, ?, ?, ?, ?, ?, ?, ?)";
+    $statement = $pdo->prepare($query);
+    $statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $date, $time, $time_zone, $encryption_key_, $encryption_iv_));
 
     $status["response"] = "Done";
 }else{
@@ -49,26 +60,4 @@ if($connection){
 }
 echo json_encode($status);
 $pdo = null;
-
-function generate_user_id($pdo){
-    $user_id = "";
-    $alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $num = array();
-    for ($i = 0; $i < 12; $i++) {
-        $num[$i] = $alphabets[rand(0,25)] . (string)rand(0,9);
-    }
-    for ($i = 0; $i < count($num); $i++) {
-        $user_id = $user_id . $num[$i];
-    }
-
-    $query = "select * from users where user_id = ?";
-    $statement = $pdo->prepare($query);
-    $statement->execute(array($user_id));
-    $result = $statement->setFetchMode(PDO::FETCH_ASSOC);
-    if($result > 0){
-        generate_user_id($pdo);
-    }
-
-    return $user_id;
-}
 ?>
