@@ -29,7 +29,7 @@ if($connection){
         $statement = $pdo->prepare($query);
         $statement->execute(array($user_id));
 
-        $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, date, time, time_zone) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, date, time, time_zone, encryption_key, encryption_iv) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $statement = $pdo->prepare($query);
         $statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $date, $time, $time_zone, $encryption_key_, $encryption_iv_));
 
