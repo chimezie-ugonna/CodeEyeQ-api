@@ -6,9 +6,10 @@ try {
     $query = "select * from login_info where date = ?";
     $statement = $pdo->prepare($query);
     $statement->execute(array("hZtvow4Knb+2HxXW3w=="));
-    $result = $statement->get_result();
-    while ($row = $result->fetch_assoc()) {
+    $result = $statement->fetch_assoc();
+    while ($row = $result) {
         echo $row['time'];
+        break;
     }
 } catch(Exception $e) {
     echo $e->getMessage();
