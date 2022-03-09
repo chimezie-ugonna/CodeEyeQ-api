@@ -2,22 +2,38 @@
 require "database_connection.php";
 $status = array();
 if($connection){
-    $ciphering = "AES-128-CTR";
-    $encryption_iv = (string)rand(1000000000000000,9999999999999999);
-    $encryption_key = (string)rand(1000000000000000,9999999999999999);
-    $encryption_iv_ = base64_encode($encryption_iv);
-    $encryption_key_ = base64_encode($encryption_key);
-
     $user_id = addslashes($_POST["user_id"]);
     $device_token = addslashes($_POST["device_token"]);
     $device_brand = addslashes($_POST["device_brand"]);
     $device_model = addslashes($_POST["device_model"]);
     $app_version = addslashes($_POST["app_version"]);
     $time_zone = addslashes($_POST["time_zone"]);
+    $password = addslashes($_POST["password"]);
+
+    $query = "select * from users where user_id = ?";
+    $statement = $pdo->prepare($query);
+    $statement->execute(array($user_id));
+    $result = $statement->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $encryption_iv = base64_decode($row['name']);
+        $encryption_key = base64_decode($row['name']);
+        $password = openssl_encrypt($password, $ciphering, $encryption_key, 0, $encryption_iv);
+
+        $query = "update users set password = ? where user_id = ?";
+        $statement = $pdo->prepare($query);
+        $statement->execute(array($password, $user_id));
+        break;
+    }
+
+    $ciphering = "AES-128-CTR";
+    $encryption_iv = (string)rand(1000000000000000,9999999999999999);
+    $encryption_key = (string)rand(1000000000000000,9999999999999999);
+    $encryption_iv_ = base64_encode($encryption_iv);
+    $encryption_key_ = base64_encode($encryption_key);
+
     date_default_timezone_set($time_zone);
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
     $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
-
     $device_brand = openssl_encrypt($device_brand, $ciphering, $encryption_key, 0, $encryption_iv);
     $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
     $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
