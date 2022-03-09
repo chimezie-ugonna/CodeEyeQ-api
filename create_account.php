@@ -1,5 +1,5 @@
 <?php
-require "databaseConnection.php";
+require "database_connection.php";
 $status = array();
 if($connection){
     $ciphering = "AES-128-CTR";
