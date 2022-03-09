@@ -11,12 +11,12 @@ if($connection){
         $encryption_iv_ = base64_encode($encryption_iv);
         $encryption_key_ = base64_encode($encryption_key);
 
-        $user_id = "nsbdjjsbddjnbfdbfj";//addslashes($_POST["user_id"]);
-        $device_token = "jsnbdjdsnmndndn:mdcnmn";//addslashes($_POST["device_token"]);
-        $device_brand = "Samsung";//addslashes($_POST["device_brand"]);
-        $device_model = "A12";//addslashes($_POST["device_model"]);
-        $app_version = "Version 1.0.0";//addslashes($_POST["app_version"]);
-        $time_zone = "Africa/Lagos";//addslashes($_POST["time_zone"]);
+        $user_id = addslashes($_POST["user_id"]);
+        $device_token = addslashes($_POST["device_token"]);
+        $device_brand = addslashes($_POST["device_brand"]);
+        $device_model = addslashes($_POST["device_model"]);
+        $app_version = addslashes($_POST["app_version"]);
+        $time_zone = addslashes($_POST["time_zone"]);
         date_default_timezone_set($time_zone);
         $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
         $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
@@ -24,6 +24,7 @@ if($connection){
         $device_brand = openssl_encrypt($device_brand, $ciphering, $encryption_key, 0, $encryption_iv);
         $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
         $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
+        $time_zone = openssl_encrypt($time_zone, $ciphering, $encryption_key, 0, $encryption_iv);
 
         $query = "delete from login_info where user_id = ?";
         $statement = $pdo->prepare($query);

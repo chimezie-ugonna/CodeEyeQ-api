@@ -45,12 +45,13 @@ if($connection){
     $device_brand = openssl_encrypt($device_brand, $ciphering, $encryption_key, 0, $encryption_iv);
     $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
     $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
+    $time_zone = openssl_encrypt($time_zone, $ciphering, $encryption_key, 0, $encryption_iv);
 
     $query = "insert into users (user_id, email, first_name, last_name, password, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created, time_zone) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($query);
     $statement->execute(array($user_id, $email, $first_name, $last_name, $password, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time, $time_zone));
 
-    $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, date, time, time_zone) values (?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, date, time, time_zone, encryption_key, encryption_iv) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($query);
     $statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $date, $time, $time_zone, $encryption_key_, $encryption_iv_));
 
