@@ -18,13 +18,13 @@ if($connection){
         $app_version = addslashes($_POST["app_version"]);
         $time_zone = addslashes($_POST["time_zone"]);
         date_default_timezone_set($time_zone);
-        $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
-        $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
+        $date = /*openssl_encrypt(*/date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv;
+        $time = /*openssl_encrypt(date(*/"g:i A"), $ciphering, $encryption_key, 0, $encryption_iv;
 
-        $device_brand = openssl_encrypt($device_brand, $ciphering, $encryption_key, 0, $encryption_iv);
-        $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
-        $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
-        $time_zone = openssl_encrypt($time_zone, $ciphering, $encryption_key, 0, $encryption_iv);
+        $device_brand = /*openssl_encrypt(*/$device_brand, $ciphering, $encryption_key, 0, $encryption_iv;
+        $device_model = /*openssl_encrypt(*/$device_model, $ciphering, $encryption_key, 0, $encryption_iv;
+        $app_version = /*openssl_encrypt(*/$app_version, $ciphering, $encryption_key, 0, $encryption_iv;
+        $time_zone = /*openssl_encrypt(*/$time_zone, $ciphering, $encryption_key, 0, $encryption_iv;
 
         $query = "delete from login_info where user_id = ?";
         $statement = $pdo->prepare($query);
