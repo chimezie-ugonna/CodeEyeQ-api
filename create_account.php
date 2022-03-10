@@ -16,7 +16,6 @@ if($connection){
     $device_model = addslashes($_POST["device_model"]);
     $app_version = addslashes($_POST["app_version"]);
     $time_zone = addslashes($_POST["time_zone"]);
-    $theme = addslashes($_POST["theme"]);
     date_default_timezone_set($time_zone);
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
     $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
@@ -45,11 +44,10 @@ if($connection){
     $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
     $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
     $time_zone = openssl_encrypt($time_zone, $ciphering, $encryption_key, 0, $encryption_iv);
-    $theme = openssl_encrypt($theme, $ciphering, $encryption_key, 0, $encryption_iv);
 
     $query = "insert into users (user_id, email, first_name, last_name, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created, time_zone, theme) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($query);
-    $statement->execute(array($user_id, $email, $first_name, $last_name, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time, $time_zone, $theme));
+    $statement->execute(array($user_id, $email, $first_name, $last_name, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time, $time_zone, "system"));
 
     $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, date, time, time_zone, encryption_key, encryption_iv) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $pdo->prepare($query);
