@@ -20,25 +20,28 @@ if($connection){
     $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
     $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
 
-    $full_name_split = explode(" ", $full_name);
-    if(count($full_name_split) > 0 && $full_name_split != ""){
-        $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
-        $ln = "";
-        if(count($full_name_split) > 1){
-            for($i = 1; $i < count($full_name_split); $i++){
-                if($i == 1){
-                    $ln = $full_name_split[$i];
-                }else{
-                    $ln = $ln . " " . $full_name_split[$i];
+    if($full_name_split != ""){
+        $full_name_split = explode(" ", $full_name);
+        if(count($full_name_split) > 0){
+            $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
+            $ln = "";
+            if(count($full_name_split) > 1){
+                for($i = 1; $i < count($full_name_split); $i++){
+                    if($i == 1){
+                        $ln = $full_name_split[$i];
+                    }else{
+                        $ln = $ln . " " . $full_name_split[$i];
+                    }
                 }
             }
-        }
-        if($ln != ""){
-            $last_name = openssl_encrypt($ln, $ciphering, $encryption_key, 0, $encryption_iv);
-        }else{
-            $last_name = "";
+            if($ln != ""){
+                $last_name = openssl_encrypt($ln, $ciphering, $encryption_key, 0, $encryption_iv);
+            }else{
+                $last_name = "";
+            }
         }
     }
+
     if($email != ""){
         $email = openssl_encrypt($email, $ciphering, $encryption_key, 0, $encryption_iv);
     }
