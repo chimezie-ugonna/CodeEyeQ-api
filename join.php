@@ -50,7 +50,7 @@ if($connection){
     $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
     $time_zone = openssl_encrypt($time_zone, $ciphering, $encryption_key, 0, $encryption_iv);
 
-    $query = "insert ignore into users (user_id, email, first_name, last_name, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created, time_zone, theme) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "insert into users (user_id, email, first_name, last_name, image_status, image_path, gender, dob, encryption_key, encryption_iv, date_created, time_created, time_zone, theme) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on conflict (user_id) do nothing";
     $statement = $pdo->prepare($query);
     $statement->execute(array($user_id, $email, $first_name, $last_name, "default", "", "", "", $encryption_key_, $encryption_iv_, $date, $time, $time_zone, "system"));
 
