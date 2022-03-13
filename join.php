@@ -21,7 +21,7 @@ if($connection){
         $date = openssl_encrypt(date("F j, Y"), $ciphering, $encryption_key, 0, $encryption_iv);
         $time = openssl_encrypt(date("g:i A"), $ciphering, $encryption_key, 0, $encryption_iv);
 
-        if($full_name_split != ""){
+        if($full_name != ""){
             $full_name_split = explode(" ", $full_name);
             if(count($full_name_split) > 0){
                 $first_name = openssl_encrypt($full_name_split[0], $ciphering, $encryption_key, 0, $encryption_iv);
