@@ -16,6 +16,7 @@ if($connection){
         $device_brand = addslashes($_POST["device_brand"]);
         $device_model = addslashes($_POST["device_model"]);
         $app_version = addslashes($_POST["app_version"]);
+        $os_version = addslashes($_POST["os_version"]);
 
         if($full_name != ""){
             $full_name_split = explode(" ", $full_name);
@@ -45,6 +46,7 @@ if($connection){
         $device_brand = openssl_encrypt($device_brand, $ciphering, $encryption_key, 0, $encryption_iv);
         $device_model = openssl_encrypt($device_model, $ciphering, $encryption_key, 0, $encryption_iv);
         $app_version = openssl_encrypt($app_version, $ciphering, $encryption_key, 0, $encryption_iv);
+        $os_version = openssl_encrypt($os_version, $ciphering, $encryption_key, 0, $encryption_iv);
 
         $query = "insert into users (user_id, email, first_name, last_name, image_status, image_path, gender, dob, encryption_key, encryption_iv, theme, created_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now()) on conflict (user_id) do nothing";
         $statement = $pdo->prepare($query);
@@ -54,9 +56,9 @@ if($connection){
         $statement = $pdo->prepare($query);
         $statement->execute(array($user_id));
 
-        $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, encryption_key, encryption_iv, done_at) values (?, ?, ?, ?, ?, ?, ?, now())";
+        $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, encryption_key, encryption_iv, done_at, os_version) values (?, ?, ?, ?, ?, ?, ?, now())";
         $statement = $pdo->prepare($query);
-        $statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $encryption_key_, $encryption_iv_));
+        $statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $encryption_key_, $encryption_iv_, $os_version));
 
         $status["response"] = "Done";
     }
