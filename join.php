@@ -56,7 +56,7 @@ if($connection){
         $statement = $pdo->prepare($query);
         $statement->execute(array($user_id));
 
-        $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, encryption_key, encryption_iv, done_at, os_version) values (?, ?, ?, ?, ?, ?, ?, now(), ?)";
+        $query = "insert into login_info (user_id, device_token, device_brand, device_model, app_version, encryption_key, encryption_iv, os_version, done_at) values (?, ?, ?, ?, ?, ?, ?, ?, now())";
         $statement = $pdo->prepare($query);
         $statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $encryption_key_, $encryption_iv_, $os_version));
 
