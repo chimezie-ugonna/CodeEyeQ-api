@@ -63,6 +63,10 @@ if ($connection != null) {
         $status["response"] = "Success";
         $status["message"] = "User created successfully.";
         http_response_code(200);
+    } else {
+        $status["response"] = "Failed";
+        $status["message"] = "Required parameters not found.";
+        http_response_code(404);
     }
 } else {
     $status["response"] = "Failed";
