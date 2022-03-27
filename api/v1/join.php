@@ -3,9 +3,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/api/config/database.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/api/models/data_security.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/api/models/users.php";
+require_once "config/database.php";
+require_once "models/data_security.php";
+require_once "models/users.php";
 
 $status = array();
 $database = new database();
