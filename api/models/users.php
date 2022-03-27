@@ -1,8 +1,4 @@
 <?php
-
-/**
- * @OA\Info(title="CodeEyeQ API", version="1.0")
- */
 require_once "login_info.php";
 class users
 {
@@ -15,9 +11,6 @@ class users
         $this->login_info = new login_info($this->connection);
     }
 
-    /**
-     * @OA\Post(path="/api/v1/users/insert", tags={Users}, @OA\Response(response="200", description="Success"), (response="404", description="Failed"))
-     */
     public function insert($user_id, $email, $first_name, $last_name, $encryption_key_, $encryption_iv_, $device_token, $device_brand, $device_model, $app_version, $os_version)
     {
         $statement = $this->connection->prepare("insert into " . $this->db_table . " (user_id, email, first_name, last_name, image_status, image_path, gender, dob, encryption_key, encryption_iv, theme, created_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now()) on conflict (user_id) do nothing");
