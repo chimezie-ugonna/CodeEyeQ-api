@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER["DOCUMENT_ROOT"] . "/api/models/login_info.php";
+require_once "login_info.php";
 class users
 {
     private $connection = null;
