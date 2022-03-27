@@ -6,9 +6,9 @@ header("Content-Type: application/json; charset=UTF-8");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 try {
-    require_once "config/database.php";
-    require_once "models/data_security.php";
-    require_once "models/users.php";
+    require_once "/api/config/database.php";
+    require_once "/api/models/data_security.php";
+    require_once "/api/models/users.php";
     
     $status = array();
     $database = new database();
