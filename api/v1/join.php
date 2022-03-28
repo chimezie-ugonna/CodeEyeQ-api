@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, GET");
 header("Content-Type: application/json; charset=UTF-8");
 
 require_once "../config/database.php";
@@ -14,7 +14,7 @@ if ($connection != null) {
     $users = new users($connection);
     $data_security = new data_security();
 
-    if (isset($_POST['user_id']) && $_POST['user_id'] != "") {
+    if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['full_name']) && $_POST['full_name'] != "" && isset($_POST['email']) && $_POST['email'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {
         $user_id = addslashes($_POST["user_id"]);
         $full_name = addslashes($_POST["full_name"]);
         $email = addslashes($_POST["email"]);
@@ -24,31 +24,27 @@ if ($connection != null) {
         $app_version = addslashes($_POST["app_version"]);
         $os_version = addslashes($_POST["os_version"]);
 
-        if ($full_name != "") {
-            $full_name_split = explode(" ", $full_name);
-            if (count($full_name_split) > 0) {
-                $first_name = $data_security->encrypt($full_name_split[0]);
-                $ln = "";
-                if (count($full_name_split) > 1) {
-                    for ($i = 1; $i < count($full_name_split); $i++) {
-                        if ($i == 1) {
-                            $ln = $full_name_split[$i];
-                        } else {
-                            $ln = $ln . " " . $full_name_split[$i];
-                        }
+        $full_name_split = explode(" ", $full_name);
+        if (count($full_name_split) > 0) {
+            $first_name = $data_security->encrypt($full_name_split[0]);
+            $ln = "";
+            if (count($full_name_split) > 1) {
+                for ($i = 1; $i < count($full_name_split); $i++) {
+                    if ($i == 1) {
+                        $ln = $full_name_split[$i];
+                    } else {
+                        $ln = $ln . " " . $full_name_split[$i];
                     }
                 }
-                if ($ln != "") {
-                    $last_name = $data_security->encrypt($ln);
-                } else {
-                    $last_name = "";
-                }
+            }
+            if ($ln != "") {
+                $last_name = $data_security->encrypt($ln);
+            } else {
+                $last_name = "";
             }
         }
 
-        if ($email != "") {
-            $email = $data_security->encrypt($email);
-        }
+        $email = $data_security->encrypt($email);
         $device_brand = $data_security->encrypt($device_brand);
         $device_model = $data_security->encrypt($device_model);
         $app_version = $data_security->encrypt($app_version);
@@ -65,7 +61,7 @@ if ($connection != null) {
         }
     } else {
         $status["response"] = "Failed";
-        $status["message"] = "Required parameters not found.";
+        $status["message"] = "Either required parameters not found or the proper request method is not used.";
         http_response_code(404);
     }
 } else {
