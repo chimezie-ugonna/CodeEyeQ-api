@@ -61,7 +61,7 @@ if ($connection != null) {
         }
     } else {
         $status["response"] = "Failed";
-        $status["message"] = "Either required parameters not found or the proper request method is not used.";
+        $status["message"] = "Either all required parameters wrer not found or the proper request method was not used.";
         http_response_code(404);
     }
 } else {
