@@ -15,7 +15,7 @@ if ($connection != null) {
     $data_security = new data_security();
     $token = "CodeEyeQ";
 
-    if (isset($_SERVER["HTTP_AUTHORIZATION"]) && strcasecmp($_SERVER["HTTP_AUTHORIZATION"], "bearer " . $token)) {
+    if (isset($_SERVER["HTTP_AUTHORIZATION"]) && strcasecmp($_SERVER["HTTP_AUTHORIZATION"], "bearer " . $token) == 0) {
         if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['full_name']) && $_POST['full_name'] != "" && isset($_POST['email']) && $_POST['email'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {
                 $user_id = addslashes($_POST["user_id"]);
