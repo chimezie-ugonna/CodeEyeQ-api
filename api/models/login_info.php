@@ -1,7 +1,6 @@
 <?php
 class login_info
 {
-
     private $connection = null;
     private $db_table = "login_info";
     public function __construct($connection)
