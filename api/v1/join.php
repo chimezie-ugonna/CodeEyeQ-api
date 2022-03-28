@@ -14,7 +14,16 @@ if ($connection != null) {
     $users = new users($connection);
     $data_security = new data_security();
 
-    if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
+    if(isset($_GET['user_id']) && $_GET['user_id'] == "1234"){
+        $status["response"] = "Success";
+        $status["message"] = "User ID correct.";
+        http_response_code(200);
+    }else{
+        $status["response"] = "Failed";
+        $status["message"] = "User ID Wrong.";
+        http_response_code(404);
+    }
+    /*if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['full_name']) && $_POST['full_name'] != "" && isset($_POST['email']) && $_POST['email'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {
             $user_id = addslashes($_POST["user_id"]);
             $full_name = addslashes($_POST["full_name"]);
@@ -69,7 +78,7 @@ if ($connection != null) {
         $status["response"] = "Failed";
         $status["message"] = "Proper request method was not used.";
         http_response_code(404);
-    }
+    }*/
 } else {
     $status["response"] = "Failed";
     $status["message"] = "Database connection failed.";
