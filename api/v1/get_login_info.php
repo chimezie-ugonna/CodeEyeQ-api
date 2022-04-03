@@ -33,7 +33,7 @@ if ($connection != null) {
                                 $encryption_iv = $row["encryption_iv"];
                                 $count = 0;
                                 while ($row2 = $statement->fetch(PDO::FETCH_ASSOC)) {
-                                    if ($row2[$count] == "user_id") {
+                                    if ($row2[$count] == "user_id" || $row2[$count] == "done_at") {
                                         array_push($status["data"][$row2[$count]], $row[$row2[$count]]);
                                     } else {
                                         if ($row[$row2[$count]] != "") {
