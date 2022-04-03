@@ -21,15 +21,42 @@ if ($connection != null) {
             $statement = $login_info->read($user_id);
             if ($statement != null) {
                 if ($statement->rowCount() > 0) {
-                    $status["response"] = "Success";
-                    $status["message"] = "Data was found.";
-                    $status["data"] = array();
-
                     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                        array_push($status["data"], $row);
+                        $statement = $login_info->read_column_names();
+                        if ($statement != null) {
+                            if ($statement->rowCount() > 0) {
+                                $status["response"] = "Success";
+                                $status["message"] = "Data was found.";
+                                $status["data"] = array();
+
+                                $encryption_key = $row["encryption_key"];
+                                $encryption_iv = $row["encryption_iv"];
+                                $count = 0;
+                                while ($row2 = $statement->fetch(PDO::FETCH_ASSOC)) {
+                                    if ($row2[$count] == "user_id") {
+                                        array_push($status["data"][$row2[$count]], $row[$row2[$count]]);
+                                    } else {
+                                        if ($row[$row2[$count]] != "") {
+                                            array_push($status["data"][$row2[$count]], $data_security->decrypt($encryption_key, $encryption_iv, $row[$row2[$count]]));
+                                        } else {
+                                            array_push($status["data"][$row2[$count]], $row[$row2[$count]]);
+                                        }
+                                    }
+                                    $count++;
+                                }
+                                http_response_code(200);
+                            } else {
+                                $status["response"] = "Failed";
+                                $status["message"] = "No data found.";
+                                http_response_code(404);
+                            }
+                        } else {
+                            $status["response"] = "Failed";
+                            $status["message"] = "Request operation failed.";
+                            http_response_code(404);
+                        }
                         break;
                     }
-                    http_response_code(200);
                 } else {
                     $status["response"] = "Failed";
                     $status["message"] = "No data found.";

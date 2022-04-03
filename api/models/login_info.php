@@ -41,4 +41,14 @@ class login_info
             return null;
         }
     }
+
+    public function read_column_names()
+    {
+        $statement = $this->connection->prepare("select column_name from information_schema.columns where table_name = " . $this->db_table);
+        if ($statement->execute()) {
+            return $statement;
+        } else {
+            return null;
+        }
+    }
 }

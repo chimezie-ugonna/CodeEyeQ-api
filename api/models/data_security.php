@@ -20,7 +20,8 @@ class data_security
         return openssl_encrypt($data, $this->ciphering, $this->encryption_key, 0, $this->encryption_iv);
     }
 
-    function decrypt()
+    function decrypt($encryption_key, $encryption_iv, $data)
     {
+        return openssl_decrypt($data, $this->ciphering, base64_decode($encryption_key), 0, base64_decode($encryption_iv));
     }
 }

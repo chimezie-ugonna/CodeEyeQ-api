@@ -44,7 +44,7 @@ if ($connection != null) {
             $app_version = $data_security->encrypt(addslashes($_POST["app_version"]));
             $os_version = $data_security->encrypt(addslashes($_POST["os_version"]));
 
-            if ($users->insert($user_id, $email, $first_name, $last_name, $data_security->encryption_key_, $data_security->encryption_iv_, $device_token, $device_brand, $device_model, $app_version, $os_version)) {
+            if ($users->insert($user_id, $email, $first_name, $last_name, $data_security->encryption_key_, $data_security->encryption_iv_, $device_token, $device_brand, $device_model, $app_version, $os_version, $data_security->encrypt("system"))) {
                 $status["response"] = "Success";
                 $status["message"] = "Account created successfully.";
                 http_response_code(200);
