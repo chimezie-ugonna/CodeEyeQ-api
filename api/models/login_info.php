@@ -31,4 +31,14 @@ class login_info
             return false;
         }
     }
+
+    public function read($user_id)
+    {
+        $statement = $this->connection->prepare("select * from " . $this->db_table . " where user_id = ?");
+        if ($statement->execute(array($user_id))) {
+            return $statement;
+        } else {
+            return null;
+        }
+    }
 }
