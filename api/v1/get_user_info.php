@@ -22,39 +22,28 @@ if ($connection != null) {
             if ($statement != null) {
                 if ($statement->rowCount() > 0) {
                     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                        $statement = $users->read_column_names();
-                        if ($statement != null) {
-                            if ($statement->rowCount() > 0) {
-                                $status["response"] = "Success";
-                                $status["message"] = "Data was found.";
-                                $status["data"] = array();
+                        $encryption_key = $row["encryption_key"];
+                        $encryption_iv = $row["encryption_iv"];
 
-                                $encryption_key = $row["encryption_key"];
-                                $encryption_iv = $row["encryption_iv"];
-                                $count = 0;
-                                while ($row2 = $statement->fetch(PDO::FETCH_ASSOC)) {
-                                    if ($row2[$count] == "user_id" || $row2[$count] == "created_at") {
-                                        array_push($status["data"][$row2[$count]], $row[$row2[$count]]);
-                                    } else {
-                                        if ($row[$row2[$count]] != "") {
-                                            array_push($status["data"][$row2[$count]], $data_security->decrypt($encryption_key, $encryption_iv, $row[$row2[$count]]));
-                                        } else {
-                                            array_push($status["data"][$row2[$count]], $row[$row2[$count]]);
-                                        }
-                                    }
-                                    $count++;
-                                }
-                                http_response_code(200);
+                        $status["response"] = "Success";
+                        $status["message"] = "Data was found.";
+                        $status["data"] = array();
+                        $data = array();
+
+                        foreach ($row as $key => $value) {
+                            if ($key == "user_id" || $key == "created_at" || $key == "encryption_key" || $key == "encryption_iv") {
+                                $data[$key] = $value;
                             } else {
-                                $status["response"] = "Failed";
-                                $status["message"] = "No data found.";
-                                http_response_code(404);
+                                if ($value != "") {
+                                    $data[$key] = $data_security->decrypt($encryption_key, $encryption_iv, $value);
+                                } else {
+                                    $data[$key] = $value;
+                                }
                             }
-                        } else {
-                            $status["response"] = "Failed";
-                            $status["message"] = "Request operation failed.";
-                            http_response_code(404);
                         }
+
+                        array_push($status["data"], $data);
+                        http_response_code(200);
                         break;
                     }
                 } else {
