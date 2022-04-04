@@ -31,7 +31,7 @@ if ($connection != null) {
                         $data = array();
 
                         foreach ($row as $key => $value) {
-                            if ($key == "user_id" || $key == "done_at" || $key == "encryption_key" || $key == "encryption_iv") {
+                            if ($key == "user_id" || $key == "device_token" || $key == "done_at" || $key == "encryption_key" || $key == "encryption_iv") {
                                 $data[$key] = $value;
                             } else {
                                 if ($value != "") {
