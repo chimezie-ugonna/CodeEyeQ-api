@@ -1,5 +1,4 @@
 <?php
-require_once "login_info.php";
 class users
 {
     private $connection = null;
