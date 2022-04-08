@@ -13,6 +13,7 @@ $database = new database();
 $connection = $database->connect();
 if ($connection != null) {
     $login_info = new login_info($connection);
+    $users = new users($connection);
     $data_security = new data_security();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,10 +25,22 @@ if ($connection != null) {
             $app_version = $data_security->encrypt(addslashes($_POST["app_version"]));
             $os_version = $data_security->encrypt(addslashes($_POST["os_version"]));
 
-            if ($login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
-                $status["response"] = "Success";
-                $status["message"] = "Logged in successfully.";
-                http_response_code(200);
+            if ($users->read($user_id)->rowCount() > 0) {
+                if ($login_info->delete($user_id)) {
+                    if ($login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
+                        $status["response"] = "Success";
+                        $status["message"] = "Logged in successfully.";
+                        http_response_code(200);
+                    } else {
+                        $status["response"] = "Failed";
+                        $status["message"] = "Log in failed.";
+                        http_response_code(404);
+                    }
+                } else {
+                    $status["response"] = "Failed";
+                    $status["message"] = "Log in failed.";
+                    http_response_code(404);
+                }
             } else {
                 $status["response"] = "Failed";
                 $status["message"] = "Log in failed.";

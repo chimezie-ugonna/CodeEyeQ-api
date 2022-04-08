@@ -13,6 +13,7 @@ $database = new database();
 $connection = $database->connect();
 if ($connection != null) {
     $users = new users($connection);
+    $login_info = new login_info($connection);
     $data_security = new data_security();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
@@ -44,10 +45,16 @@ if ($connection != null) {
             $app_version = $data_security->encrypt(addslashes($_POST["app_version"]));
             $os_version = $data_security->encrypt(addslashes($_POST["os_version"]));
 
-            if ($users->insert($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $device_token, $device_brand, $device_model, $app_version, $os_version, $data_security->encrypt("system"))) {
-                $status["response"] = "Success";
-                $status["message"] = "Account created successfully.";
-                http_response_code(200);
+            if ($users->insert($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $data_security->encrypt("system"))) {
+                if ($login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
+                    $status["response"] = "Success";
+                    $status["message"] = "Account created successfully.";
+                    http_response_code(200);
+                } else {
+                    $status["response"] = "Failed";
+                    $status["message"] = "Account creation failed.";
+                    http_response_code(404);
+                }
             } else {
                 $status["response"] = "Failed";
                 $status["message"] = "Account creation failed.";

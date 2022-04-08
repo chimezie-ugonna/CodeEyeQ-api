@@ -3,22 +3,16 @@ class users
 {
     private $connection = null;
     private $db_table = "users";
-    private $login_info = null;
     public function __construct($connection)
     {
         $this->connection = $connection;
-        $this->login_info = new login_info($this->connection);
     }
 
-    public function insert($user_id, $email, $first_name, $last_name, $decryption_key, $decryption_iv, $device_token, $device_brand, $device_model, $app_version, $os_version, $theme)
+    public function insert($user_id, $email, $first_name, $last_name, $decryption_key, $decryption_iv, $theme)
     {
         $statement = $this->connection->prepare("insert into " . $this->db_table . " (user_id, email, first_name, last_name, image_path, gender, dob, decryption_key, decryption_iv, theme, created_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now()) on conflict (user_id) do nothing");
         if ($statement->execute(array($user_id, $email, $first_name, $last_name, "", "", "", $decryption_key, $decryption_iv, $theme))) {
-            if ($this->login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $decryption_key, $decryption_iv, $os_version)) {
-                return true;
-            } else {
-                return false;
-            }
+            return true;
         } else {
             return false;
         }
@@ -26,13 +20,9 @@ class users
 
     public function delete($user_id)
     {
-        if ($this->login_info->delete($user_id)) {
-            $statement = $this->connection->prepare("delete from " . $this->db_table . " where user_id = ?");
-            if ($statement->execute(array($user_id))) {
-                return true;
-            } else {
-                return false;
-            }
+        $statement = $this->connection->prepare("delete from " . $this->db_table . " where user_id = ?");
+        if ($statement->execute(array($user_id))) {
+            return true;
         } else {
             return false;
         }
