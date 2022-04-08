@@ -75,7 +75,7 @@ if ($connection != null) {
                             if (isset($_POST['image']) && $_POST['image'] != "") {
                                 if ($image_path == "") {
                                     $random = rand(100000000, 999999999);
-                                    $image_path = "IMG_" . (string)$random;
+                                    $image_path = $data_security->encrypt("IMG_" . (string)$random);
                                 }
                                 /*require 'autoload.php';
                                 require 'src/Helpers.php';
