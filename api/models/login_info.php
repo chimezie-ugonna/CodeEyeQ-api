@@ -10,10 +10,14 @@ class login_info
 
     public function insert($user_id, $device_token, $device_brand, $device_model, $app_version, $decryption_key, $decryption_iv, $os_version)
     {
-        if ($this->delete($user_id)) {
-            $statement = $this->connection->prepare("insert into " . $this->db_table . " (user_id, device_token, device_brand, device_model, app_version, decryption_key, decryption_iv, os_version, done_at) values (?, ?, ?, ?, ?, ?, ?, ?, now())");
-            if ($statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $decryption_key, $decryption_iv, $os_version))) {
-                return true;
+        if ($this->read($user_id)) {
+            if ($this->delete($user_id)) {
+                $statement = $this->connection->prepare("insert into " . $this->db_table . " (user_id, device_token, device_brand, device_model, app_version, decryption_key, decryption_iv, os_version, done_at) values (?, ?, ?, ?, ?, ?, ?, ?, now())");
+                if ($statement->execute(array($user_id, $device_token, $device_brand, $device_model, $app_version, $decryption_key, $decryption_iv, $os_version))) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
