@@ -23,7 +23,7 @@ if ($connection != null) {
             $app_version = $data_security->encrypt(addslashes($_POST["app_version"]));
             $os_version = $data_security->encrypt(addslashes($_POST["os_version"]));
 
-            if ($login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->encryption_key_, $data_security->encryption_iv_, $os_version)) {
+            if ($login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
                 $status["response"] = "Success";
                 $status["message"] = "Logged in successfully.";
                 http_response_code(200);

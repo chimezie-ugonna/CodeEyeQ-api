@@ -18,8 +18,7 @@ if ($connection != null) {
         if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['full_name']) && $_POST['full_name'] != "" && isset($_POST['email']) && $_POST['email'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {
             $user_id = addslashes($_POST["user_id"]);
             $device_token = addslashes($_POST["device_token"]);
-            $full_name = addslashes($_POST["full_name"]);
-            $full_name_split = explode(" ", $full_name);
+            $full_name_split = explode(" ", addslashes($_POST["full_name"]));
             if (count($full_name_split) > 0) {
                 $first_name = $data_security->encrypt($full_name_split[0]);
                 $ln = "";
@@ -44,7 +43,7 @@ if ($connection != null) {
             $app_version = $data_security->encrypt(addslashes($_POST["app_version"]));
             $os_version = $data_security->encrypt(addslashes($_POST["os_version"]));
 
-            if ($users->insert($user_id, $email, $first_name, $last_name, $data_security->encryption_key_, $data_security->encryption_iv_, $device_token, $device_brand, $device_model, $app_version, $os_version, $data_security->encrypt("system"))) {
+            if ($users->insert($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $device_token, $device_brand, $device_model, $app_version, $os_version, $data_security->encrypt("system"))) {
                 $status["response"] = "Success";
                 $status["message"] = "Account created successfully.";
                 http_response_code(200);

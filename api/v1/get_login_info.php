@@ -22,8 +22,8 @@ if ($connection != null) {
             if ($statement != null) {
                 if ($statement->rowCount() > 0) {
                     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                        $encryption_key = $row["encryption_key"];
-                        $encryption_iv = $row["encryption_iv"];
+                        $decryption_key = $row["decryption_key"];
+                        $decryption_iv = $row["decryption_iv"];
 
                         $status["response"] = "Success";
                         $status["message"] = "Data was found.";
@@ -31,11 +31,11 @@ if ($connection != null) {
                         $data = array();
 
                         foreach ($row as $key => $value) {
-                            if ($key == "user_id" || $key == "device_token" || $key == "done_at" || $key == "encryption_key" || $key == "encryption_iv") {
+                            if ($key == "user_id" || $key == "device_token" || $key == "done_at" || $key == "decryption_key" || $key == "decryption_iv") {
                                 $data[$key] = $value;
                             } else {
                                 if ($value != "") {
-                                    $data[$key] = $data_security->decrypt($encryption_key, $encryption_iv, $value);
+                                    $data[$key] = $data_security->decrypt($decryption_key, $decryption_iv, $value);
                                 } else {
                                     $data[$key] = $value;
                                 }
