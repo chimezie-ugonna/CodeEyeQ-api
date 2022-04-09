@@ -58,7 +58,7 @@ if ($connection != null) {
             }
         } else {
             $status["response"] = "Failed";
-            $status["message"] = "Required parameter was not found.";
+            $status["message"] = "A required parameter was not found.";
             http_response_code(404);
         }
     } else {
