@@ -22,10 +22,10 @@ if ($connection != null) {
                 if ($statement != null) {
                     if ($statement->rowCount() > 0) {
                         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                            $data_security->$decryption_key = $row["decryption_key"];
-                            $data_security->$decryption_iv = $row["decryption_iv"];
-                            $data_security->$encryption_key = base64_decode($row["decryption_key"]);
-                            $data_security->$encryption_iv = base64_decode($row["decryption_iv"]);
+                            $data_security->decryption_key = $row["decryption_key"];
+                            $data_security->decryption_iv = $row["decryption_iv"];
+                            $data_security->encryption_key = base64_decode($row["decryption_key"]);
+                            $data_security->encryption_iv = base64_decode($row["decryption_iv"]);
 
                             $first_name = $row["first_name"];
                             $last_name = $row["last_name"];

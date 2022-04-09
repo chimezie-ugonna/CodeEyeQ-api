@@ -1,7 +1,7 @@
 <?php
 class data_security
 {
-    public $ciphering = "AES-128-CTR";
+    private $ciphering = "AES-128-CTR";
     public $encryption_iv;
     public $encryption_key;
     public $decryption_iv;
