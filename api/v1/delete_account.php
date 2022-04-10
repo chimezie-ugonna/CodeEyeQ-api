@@ -21,16 +21,16 @@ if ($connection != null) {
             if ($login_info->delete($user_id)) {
                 if ($users->delete($user_id)) {
                     $status["response"] = "Success";
-                    $status["message"] = "User deleted successfully.";
+                    $status["message"] = "Account deleted successfully.";
                     http_response_code(200);
                 } else {
                     $status["response"] = "Failed";
-                    $status["message"] = "User deletion failed.";
+                    $status["message"] = "Account deletion failed.";
                     http_response_code(404);
                 }
             } else {
                 $status["response"] = "Failed";
-                $status["message"] = "User deletion failed.";
+                $status["message"] = "Account deletion failed.";
                 http_response_code(404);
             }
         } else {
