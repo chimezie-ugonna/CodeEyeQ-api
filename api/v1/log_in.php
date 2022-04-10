@@ -27,7 +27,7 @@ if ($connection != null) {
 
             if ($users->read($user_id)->rowCount() > 0) {
                 if ($login_info->delete($user_id)) {
-                    if ($login_info->insert($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
+                    if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
                         $status["response"] = "Success";
                         $status["message"] = "Logged in successfully.";
                         http_response_code(200);

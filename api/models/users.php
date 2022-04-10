@@ -8,20 +8,10 @@ class users
         $this->connection = $connection;
     }
 
-    public function insert($user_id, $email, $first_name, $last_name, $decryption_key, $decryption_iv, $theme)
+    public function create($user_id, $email, $first_name, $last_name, $decryption_key, $decryption_iv, $theme)
     {
         $statement = $this->connection->prepare("insert into " . $this->db_table . " (user_id, email, first_name, last_name, image_path, gender, dob, decryption_key, decryption_iv, theme, created_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now()) on conflict (user_id) do nothing");
         if ($statement->execute(array($user_id, $email, $first_name, $last_name, "", "", "", $decryption_key, $decryption_iv, $theme))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function delete($user_id)
-    {
-        $statement = $this->connection->prepare("delete from " . $this->db_table . " where user_id = ?");
-        if ($statement->execute(array($user_id))) {
             return true;
         } else {
             return false;
@@ -45,6 +35,16 @@ class users
             return $statement;
         } else {
             return null;
+        }
+    }
+
+    public function delete($user_id)
+    {
+        $statement = $this->connection->prepare("delete from " . $this->db_table . " where user_id = ?");
+        if ($statement->execute(array($user_id))) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
