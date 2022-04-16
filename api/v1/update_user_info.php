@@ -154,10 +154,12 @@ if ($connection != null) {
                             if ($users->update($user_id, $email, $first_name, $last_name, $image_path, $gender, $dob, $theme)) {
                                 $status["response"] = "Success";
                                 $status["message"] = "Account updated successfully.";
+                                $status["data"] = array();
                                 http_response_code(200);
                             } else {
                                 $status["response"] = "Failed";
                                 $status["message"] = "Account updation failed.";
+                                $status["data"] = array();
                                 http_response_code(404);
                             }
                             break;
@@ -165,21 +167,25 @@ if ($connection != null) {
                     } else {
                         $status["response"] = "Failed";
                         $status["message"] = "No data found.";
+                        $status["data"] = array();
                         http_response_code(404);
                     }
                 } else {
                     $status["response"] = "Failed";
                     $status["message"] = "Request operation failed.";
+                    $status["data"] = array();
                     http_response_code(404);
                 }
             } else {
                 $status["response"] = "Failed";
                 $status["message"] = "There is nothing to update.";
+                $status["data"] = array();
                 http_response_code(404);
             }
         } else {
             $status["response"] = "Failed";
             $status["message"] = "A required parameter was not found.";
+            $status["data"] = array();
             http_response_code(404);
         }
 
@@ -280,26 +286,31 @@ if ($connection != null) {
                 } else {
                     $status["response"] = "Failed";
                     $status["message"] = "Request operation failed.";
+                    $status["data"] = array();
                     http_response_code(404);
                 }
             } else {
                 $status["response"] = "Failed";
                 $status["message"] = "There is nothing to update.";
+                $status["data"] = array();
                 http_response_code(404);
             }
         } else {
             $status["response"] = "Failed";
             $status["message"] = "A required parameter was not found.";
+            $status["data"] = array();
             http_response_code(404);
         }
     } else {
         $status["response"] = "Failed";
         $status["message"] = "Proper request method was not used.";
+        $status["data"] = array();
         http_response_code(404);
     }
 } else {
     $status["response"] = "Failed";
     $status["message"] = "Database connection failed.";
+    $status["data"] = array();
     http_response_code(404);
 }
 echo json_encode($status);

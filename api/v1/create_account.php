@@ -79,30 +79,36 @@ if ($connection != null) {
                 if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
                     $status["response"] = "Success";
                     $status["message"] = "Account created successfully and log in successful.";
+                    $status["data"] = array();
                     http_response_code(200);
                 } else {
                     $status["response"] = "Failed";
                     $status["message"] = "Account created successfully but log in failed.";
+                    $status["data"] = array();
                     http_response_code(404);
                 }
             } else {
                 $status["response"] = "Failed";
                 $status["message"] = "Account creation failed.";
+                $status["data"] = array();
                 http_response_code(404);
             }
         } else {
             $status["response"] = "Failed";
             $status["message"] = "All required parameters were not found.";
+            $status["data"] = array();
             http_response_code(404);
         }
     } else {
         $status["response"] = "Failed";
         $status["message"] = "Proper request method was not used.";
+        $status["data"] = array();
         http_response_code(404);
     }
 } else {
     $status["response"] = "Failed";
     $status["message"] = "Database connection failed.";
+    $status["data"] = array();
     http_response_code(404);
 }
 echo json_encode($status);

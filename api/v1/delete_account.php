@@ -22,30 +22,36 @@ if ($connection != null) {
                 if ($users->delete($user_id)) {
                     $status["response"] = "Success";
                     $status["message"] = "Account deleted successfully.";
+                    $status["data"] = array();
                     http_response_code(200);
                 } else {
                     $status["response"] = "Failed";
                     $status["message"] = "Account deletion failed.";
+                    $status["data"] = array();
                     http_response_code(404);
                 }
             } else {
                 $status["response"] = "Failed";
                 $status["message"] = "Account deletion failed.";
+                $status["data"] = array();
                 http_response_code(404);
             }
         } else {
             $status["response"] = "Failed";
             $status["message"] = "A required parameter was not found.";
+            $status["data"] = array();
             http_response_code(404);
         }
     } else {
         $status["response"] = "Failed";
         $status["message"] = "Proper request method was not used.";
+        $status["data"] = array();
         http_response_code(404);
     }
 } else {
     $status["response"] = "Failed";
     $status["message"] = "Database connection failed.";
+    $status["data"] = array();
     http_response_code(404);
 }
 echo json_encode($status);
