@@ -27,22 +27,16 @@ if ($connection != null) {
             $app_version = "";
             $os_version = "";
             if ($_SERVER["CONTENT_TYPE"] == "application/json") {
-                ini_set('display_errors', 1);
-                error_reporting(E_ALL);
-                try {
-                    $data = json_decode(file_get_contents("php://input"));
-                    if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "" && isset($data["full_name"]) && $data["full_name"] != "" && isset($data["email"]) && $data["email"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
-                        $user_id  =  addslashes($data["user_id"]);
-                        $device_token  =  addslashes($data["device_token"]);
-                        $full_name  =  addslashes($data["full_name"]);
-                        $email  =  addslashes($data["email"]);
-                        $device_brand  =  addslashes($data["device_brand"]);
-                        $device_model  =  addslashes($data["device_model"]);
-                        $app_version  =  addslashes($data["app_version"]);
-                        $os_version  =  addslashes($data["os_version"]);
-                    }
-                } catch (Exception $e) {
-                    echo $e->getMessage();
+                $data = json_decode(file_get_contents("php://input"), true);
+                if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "" && isset($data["full_name"]) && $data["full_name"] != "" && isset($data["email"]) && $data["email"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
+                    $user_id  =  addslashes($data["user_id"]);
+                    $device_token  =  addslashes($data["device_token"]);
+                    $full_name  =  addslashes($data["full_name"]);
+                    $email  =  addslashes($data["email"]);
+                    $device_brand  =  addslashes($data["device_brand"]);
+                    $device_model  =  addslashes($data["device_model"]);
+                    $app_version  =  addslashes($data["app_version"]);
+                    $os_version  =  addslashes($data["os_version"]);
                 }
             } else if ($_SERVER["CONTENT_TYPE"] == "multipart/form-data" || $_SERVER["REQUEST_METHOD"] == "application/x-www-form-urlencoded") {
                 if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['full_name']) && $_POST['full_name'] != "" && isset($_POST['email']) && $_POST['email'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {

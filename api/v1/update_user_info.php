@@ -24,7 +24,7 @@ if ($connection != null) {
             $gender = "";
             $dob = "";
             if ($_SERVER["CONTENT_TYPE"] == "application/json") {
-                $data = json_decode(file_get_contents("php://input"));
+                $data = json_decode(file_get_contents("php://input"), true);
                 if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "") {
                     $user_id  =  addslashes($data["user_id"]);
                     if (isset($data['full_name']) && $data['full_name'] != "") {

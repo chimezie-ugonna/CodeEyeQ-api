@@ -25,7 +25,7 @@ if ($connection != null) {
             $app_version = "";
             $os_version = "";
             if ($_SERVER["CONTENT_TYPE"] == "application/json") {
-                $data = json_decode(file_get_contents("php://input"));
+                $data = json_decode(file_get_contents("php://input"), true);
                 if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
                     $user_id  =  addslashes($data["user_id"]);
                     $device_token  =  addslashes($data["device_token"]);
