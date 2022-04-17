@@ -7,14 +7,15 @@ require_once "../config/database.php";
 require_once "../models/data_security.php";
 require_once "../models/login_info.php";
 require_once "../models/users.php";
+require_once "../models/response.php";
 
-$status = array();
 $database = new database();
 $connection = $database->connect();
 if ($connection != null) {
     $login_info = new login_info($connection);
     $users = new users($connection);
     $data_security = new data_security();
+    $response = new response();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
         $user_id = "";
@@ -53,44 +54,22 @@ if ($connection != null) {
             if ($users->read($user_id)->rowCount() > 0) {
                 if ($login_info->delete($user_id)) {
                     if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
-                        $status["response"] = "Success";
-                        $status["message"] = "Log in successful.";
-                        $status["data"] = array();
-                        http_response_code(200);
+                        $response->send(200, "Log in successful.");
                     } else {
-                        $status["response"] = "Failed";
-                        $status["message"] = "Log in failed.";
-                        $status["data"] = array();
-                        http_response_code(404);
+                        $response->send(500, "Log in failed.");
                     }
                 } else {
-                    $status["response"] = "Failed";
-                    $status["message"] = "Log in failed.";
-                    $status["data"] = array();
-                    http_response_code(404);
+                    $response->send(500, "Log in failed.");
                 }
             } else {
-                $status["response"] = "Failed";
-                $status["message"] = "Log in failed because user does not exist.";
-                $status["data"] = array();
-                http_response_code(404);
+                $response->send(404, "Log in failed because user does not exist.");
             }
         } else {
-            $status["response"] = "Failed";
-            $status["message"] = "All required parameters were not found.";
-            $status["data"] = array();
-            http_response_code(404);
+            $response->send(400, "All required parameters were not found.");
         }
     } else {
-        $status["response"] = "Failed";
-        $status["message"] = "Proper request method was not used.";
-        $status["data"] = array();
-        http_response_code(404);
+        $response->send(400, "Proper request method was not used.");
     }
 } else {
-    $status["response"] = "Failed";
-    $status["message"] = "Database connection failed.";
-    $status["data"] = array();
-    http_response_code(404);
+    $response->send(500, "Database connection failed.");
 }
-echo json_encode($status);

@@ -7,14 +7,15 @@ require_once "../config/database.php";
 require_once "../models/data_security.php";
 require_once "../models/users.php";
 require_once "../models/login_info.php";
+require_once "../models/response.php";
 
-$status = array();
 $database = new database();
 $connection = $database->connect();
 if ($connection != null) {
     $users = new users($connection);
     $login_info = new login_info($connection);
     $data_security = new data_security();
+    $response = new response();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
         $user_id = "";
@@ -77,38 +78,19 @@ if ($connection != null) {
 
             if ($users->create($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $data_security->encrypt("system"))) {
                 if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
-                    $status["response"] = "Success";
-                    $status["message"] = "Account created successfully and log in successful.";
-                    $status["data"] = array();
-                    http_response_code(200);
+                    $response->send(201, "Account created successfully and log in successful.");
                 } else {
-                    $status["response"] = "Failed";
-                    $status["message"] = "Account created successfully but log in failed.";
-                    $status["data"] = array();
-                    http_response_code(404);
+                    $response->send(500, "Account created successfully but log in failed.");
                 }
             } else {
-                $status["response"] = "Failed";
-                $status["message"] = "Account creation failed.";
-                $status["data"] = array();
-                http_response_code(404);
+                $response->send(500, "Account creation failed.");
             }
         } else {
-            $status["response"] = "Failed";
-            $status["message"] = "All required parameters were not found.";
-            $status["data"] = array();
-            http_response_code(404);
+            $response->send(400, "All required parameters were not found.");
         }
     } else {
-        $status["response"] = "Failed";
-        $status["message"] = "Proper request method was not used.";
-        $status["data"] = array();
-        http_response_code(404);
+        $response->send(400, "Proper request method was not used.");
     }
 } else {
-    $status["response"] = "Failed";
-    $status["message"] = "Database connection failed.";
-    $status["data"] = array();
-    http_response_code(404);
+    $response->send(500, "Database connection failed.");
 }
-echo json_encode($status);

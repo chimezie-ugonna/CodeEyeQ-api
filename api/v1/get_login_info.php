@@ -6,13 +6,14 @@ header("Content-Type: application/json; charset=UTF-8");
 require_once "../config/database.php";
 require_once "../models/data_security.php";
 require_once "../models/login_info.php";
+require_once "../models/response.php";
 
-$status = array();
 $database = new database();
 $connection = $database->connect();
 if ($connection != null) {
     $login_info = new login_info($connection);
     $data_security = new data_security();
+    $response = new response();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
         if (isset($_GET['user_id']) && $_GET['user_id'] != "") {
@@ -24,10 +25,6 @@ if ($connection != null) {
                     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                         $decryption_key = $row["decryption_key"];
                         $decryption_iv = $row["decryption_iv"];
-
-                        $status["response"] = "Success";
-                        $status["message"] = "Data was found.";
-                        $status["data"] = array();
                         $data = array();
 
                         foreach ($row as $key => $value) {
@@ -42,38 +39,21 @@ if ($connection != null) {
                             }
                         }
 
-                        array_push($status["data"], $data);
-                        http_response_code(200);
+                        $response->send(200, "Data was found.", $data);
                         break;
                     }
                 } else {
-                    $status["response"] = "Failed";
-                    $status["message"] = "No data found.";
-                    $status["data"] = array();
-                    http_response_code(404);
+                    $response->send(404, "Data not found.");
                 }
             } else {
-                $status["response"] = "Failed";
-                $status["message"] = "Request operation failed.";
-                $status["data"] = array();
-                http_response_code(404);
+                $response->send(500, "Request operation failed.");
             }
         } else {
-            $status["response"] = "Failed";
-            $status["message"] = "A required parameter was not found.";
-            $status["data"] = array();
-            http_response_code(404);
+            $response->send(400, "A required parameter was not found.");
         }
     } else {
-        $status["response"] = "Failed";
-        $status["message"] = "Proper request method was not used.";
-        $status["data"] = array();
-        http_response_code(404);
+        $response->send(400, "Proper request method was not used.");
     }
 } else {
-    $status["response"] = "Failed";
-    $status["message"] = "Database connection failed.";
-    $status["data"] = array();
-    http_response_code(404);
+    $response->send(500, "Database connection failed.");
 }
-echo json_encode($status);
