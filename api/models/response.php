@@ -1,5 +1,4 @@
 <?php
-
 class response
 {
     function send($code, $message, $data = array())
