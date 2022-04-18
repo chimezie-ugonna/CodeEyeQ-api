@@ -76,7 +76,7 @@ if ($connection != null) {
             $app_version = $data_security->encrypt($app_version);
             $os_version = $data_security->encrypt($os_version);
 
-            if ($users->create($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $data_security->encrypt("system"))) {
+            if ($users->create($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $data_security->encrypt("system"), $data_security->encrypt("user"), $data_security->encrypt("0"))) {
                 if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
                     $response->send(201, "Account created successfully and log in successful.");
                 } else {

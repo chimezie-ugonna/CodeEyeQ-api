@@ -23,6 +23,8 @@ if ($connection != null) {
         $image = "";
         $gender = "";
         $dob = "";
+        $type = "";
+        $point = "";
         if ($_SERVER["CONTENT_TYPE"] == "application/json") {
             $data = json_decode(file_get_contents("php://input"), true);
             if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "") {
@@ -44,6 +46,12 @@ if ($connection != null) {
                 }
                 if (isset($data['dob']) && $data['dob'] != "") {
                     $dob  =  addslashes($data["dob"]);
+                }
+                if (isset($data['type']) && $data['type'] != "") {
+                    $type  =  addslashes($data["type"]);
+                }
+                if (isset($data['point']) && $data['point'] != "") {
+                    $point  =  addslashes($data["point"]);
                 }
             }
         } else {
@@ -67,11 +75,17 @@ if ($connection != null) {
                 if (isset($_POST['dob']) && $_POST['dob'] != "") {
                     $dob  =  addslashes($_POST["dob"]);
                 }
+                if (isset($_POST['type']) && $_POST['type'] != "") {
+                    $type  =  addslashes($_POST["type"]);
+                }
+                if (isset($_POST['point']) && $_POST['point'] != "") {
+                    $point  =  addslashes($_POST["point"]);
+                }
             }
         }
 
         if ($user_id != "") {
-            if ($full_name != "" || $email != "" || $theme != "" || $gender != "" || $image != "" || $dob != "") {
+            if ($full_name != "" || $email != "" || $theme != "" || $gender != "" || $image != "" || $dob != "" || $type != "" || $point != "") {
                 $statement = $users->read($user_id);
                 if ($statement != null) {
                     if ($statement->rowCount() > 0) {
@@ -124,12 +138,6 @@ if ($connection != null) {
                                 $gender = $row["gender"];
                             }
 
-                            if ($dob != "") {
-                                $dob = $data_security->encrypt($dob);
-                            } else {
-                                $dob = $row["dob"];
-                            }
-
                             $image_path = $row["image_path"];
                             if ($image != "") {
                                 if ($image_path == "") {
@@ -152,7 +160,25 @@ if ($connection != null) {
                                     }*/
                             }
 
-                            if ($users->update($user_id, $email, $first_name, $last_name, $image_path, $gender, $dob, $theme)) {
+                            if ($dob != "") {
+                                $dob = $data_security->encrypt($dob);
+                            } else {
+                                $dob = $row["dob"];
+                            }
+
+                            if ($type != "") {
+                                $type = $data_security->encrypt($type);
+                            } else {
+                                $type = $row["type"];
+                            }
+
+                            if ($point != "") {
+                                $point = $data_security->encrypt($point);
+                            } else {
+                                $point = $row["point"];
+                            }
+
+                            if ($users->update($user_id, $email, $first_name, $last_name, $image_path, $gender, $dob, $theme, $type, $point)) {
                                 $response->send(200, "Account updated successfully.");
                             } else {
                                 $response->send(500, "Account updation failed.");
