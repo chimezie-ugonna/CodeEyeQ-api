@@ -3,11 +3,12 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once "../config/database.php";
+require_once "../models/database.php";
 require_once "../models/data_security.php";
 require_once "../models/users.php";
 require_once "../models/login_info.php";
 require_once "../models/response.php";
+require_once "../models/authentication.php";
 
 $database = new database();
 $connection = $database->connect();
@@ -16,6 +17,7 @@ if ($connection != null) {
     $login_info = new login_info($connection);
     $data_security = new data_security();
     $response = new response();
+    $authentication = new authentication();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
         $user_id = "";
@@ -78,7 +80,8 @@ if ($connection != null) {
 
             if ($users->create($user_id, $email, $first_name, $last_name, $data_security->decryption_key, $data_security->decryption_iv, $data_security->encrypt("system"), $data_security->encrypt("user"), $data_security->encrypt("0"))) {
                 if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
-                    $response->send(201, "Account created successfully and log in successful.");
+                    $token = $authentication->encode($user_id);
+                    $response->send(201, "Account created successfully and log in successful.", array("token" => $token));
                 } else {
                     $response->send(500, "Account created successfully but log in failed.");
                 }
