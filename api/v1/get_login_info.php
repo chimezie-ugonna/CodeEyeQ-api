@@ -24,44 +24,48 @@ if ($connection != null) {
             list($type, $token) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
             if (strcasecmp($type, "Bearer") == 0) {
                 $data = $authentication->decode($token);
-                $user_id = $data["user_id"];
-                $statement = $users->read($user_id);
-                if ($statement != null) {
-                    if ($statement->rowCount() > 0) {
-                        $statement = $login_info->read($user_id);
-                        if ($statement != null) {
-                            if ($statement->rowCount() > 0) {
-                                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                                    $decryption_key = $row["decryption_key"];
-                                    $decryption_iv = $row["decryption_iv"];
-                                    $data = array();
+                if (isset($data["user_id"])) {
+                    $user_id = $data["user_id"];
+                    $statement = $users->read($user_id);
+                    if ($statement != null) {
+                        if ($statement->rowCount() > 0) {
+                            $statement = $login_info->read($user_id);
+                            if ($statement != null) {
+                                if ($statement->rowCount() > 0) {
+                                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                                        $decryption_key = $row["decryption_key"];
+                                        $decryption_iv = $row["decryption_iv"];
+                                        $data = array();
 
-                                    foreach ($row as $key => $value) {
-                                        if ($key == "user_id" || $key == "device_token" || $key == "done_at" || $key == "decryption_key" || $key == "decryption_iv") {
-                                            $data[$key] = $value;
-                                        } else {
-                                            if ($value != "") {
-                                                $data[$key] = $data_security->decrypt($decryption_key, $decryption_iv, $value);
-                                            } else {
+                                        foreach ($row as $key => $value) {
+                                            if ($key == "user_id" || $key == "device_token" || $key == "done_at" || $key == "decryption_key" || $key == "decryption_iv") {
                                                 $data[$key] = $value;
+                                            } else {
+                                                if ($value != "") {
+                                                    $data[$key] = $data_security->decrypt($decryption_key, $decryption_iv, $value);
+                                                } else {
+                                                    $data[$key] = $value;
+                                                }
                                             }
                                         }
-                                    }
 
-                                    $response->send(200, "Data was found.", $data);
-                                    break;
+                                        $response->send(200, "Data was found.", $data);
+                                        break;
+                                    }
+                                } else {
+                                    $response->send(404, "Data not found.");
                                 }
                             } else {
-                                $response->send(404, "Data not found.");
+                                $response->send(500, "Request operation failed.");
                             }
                         } else {
-                            $response->send(500, "Request operation failed.");
+                            $response->send(401, "Unauthorized access, user does not exist.");
                         }
                     } else {
-                        $response->send(401, "Unauthorized access, user does not exist.");
+                        $response->send(500, "Authentication failed.");
                     }
                 } else {
-                    $response->send(500, "Authentication failed.");
+                    $response->send(401, "Bearer token is invalid.");
                 }
             } else {
                 $response->send(401, "Bearer token is required.");

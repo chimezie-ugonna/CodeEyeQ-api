@@ -22,24 +22,28 @@ if ($connection != null) {
             list($type, $token) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
             if (strcasecmp($type, "Bearer") == 0) {
                 $data = $authentication->decode($token);
-                $user_id = $data["user_id"];
-                $statement = $users->read($user_id);
-                if ($statement != null) {
-                    if ($statement->rowCount() > 0) {
-                        if ($login_info->delete($user_id)) {
-                            if ($users->delete($user_id)) {
-                                $response->send(200, "Account deleted successfully.");
+                if (isset($data["user_id"])) {
+                    $user_id = $data["user_id"];
+                    $statement = $users->read($user_id);
+                    if ($statement != null) {
+                        if ($statement->rowCount() > 0) {
+                            if ($login_info->delete($user_id)) {
+                                if ($users->delete($user_id)) {
+                                    $response->send(200, "Account deleted successfully.");
+                                } else {
+                                    $response->send(500, "Account deletion failed.");
+                                }
                             } else {
                                 $response->send(500, "Account deletion failed.");
                             }
                         } else {
-                            $response->send(500, "Account deletion failed.");
+                            $response->send(401, "Unauthorized access, user does not exist.");
                         }
                     } else {
-                        $response->send(401, "Unauthorized access, user does not exist.");
+                        $response->send(500, "Authentication failed.");
                     }
                 } else {
-                    $response->send(500, "Authentication failed.");
+                    $response->send(401, "Bearer token is invalid.");
                 }
             } else {
                 $response->send(401, "Bearer token is required.");

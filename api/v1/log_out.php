@@ -22,20 +22,24 @@ if ($connection != null) {
             list($type, $token) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
             if (strcasecmp($type, "Bearer") == 0) {
                 $data = $authentication->decode($token);
-                $user_id = $data["user_id"];
-                $statement = $users->read($user_id);
-                if ($statement != null) {
-                    if ($statement->rowCount() > 0) {
-                        if ($login_info->delete($user_id)) {
-                            $response->send(200, "Log out successful.");
+                if (isset($data["user_id"])) {
+                    $user_id = $data["user_id"];
+                    $statement = $users->read($user_id);
+                    if ($statement != null) {
+                        if ($statement->rowCount() > 0) {
+                            if ($login_info->delete($user_id)) {
+                                $response->send(200, "Log out successful.");
+                            } else {
+                                $response->send(500, "Log out failed.");
+                            }
                         } else {
-                            $response->send(500, "Log out failed.");
+                            $response->send(401, "Unauthorized access, user does not exist.");
                         }
                     } else {
-                        $response->send(401, "Unauthorized access, user does not exist.");
+                        $response->send(500, "Authentication failed.");
                     }
                 } else {
-                    $response->send(500, "Authentication failed.");
+                    $response->send(401, "Bearer token is invalid.");
                 }
             } else {
                 $response->send(401, "Bearer token is required.");
