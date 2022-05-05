@@ -24,6 +24,7 @@ if ($connection != null) {
             try {
                 list($type, $token) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
                 if (strcasecmp($type, "Bearer") == 0) {
+                    echo $token;
                     $data = $authentication->decode($token);
                     if ($data != false) {
                         $user_id = $data["user_id"];
