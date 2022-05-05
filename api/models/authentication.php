@@ -22,7 +22,8 @@ class authentication
     function decode($token)
     {
         try {
-            return json_decode(json_encode(JWT::decode($token, $this->key)), true);
+            $decoded_array = (array) (JWT::decode($token, new Key($this->key, 'HS512')));
+            return $decoded_array;
         } catch (\Exception $e) {
             return false;
         }
