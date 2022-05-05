@@ -22,7 +22,7 @@ class authentication
     function decode($token)
     {
         try {
-            return json_decode(json_encode(JWT::decode($token, new Key("hash('sha512', 'qeyeedoc')", 'HS512'))), true);
+            return json_encode(JWT::decode($token, new Key($this->key, 'HS512')));
         } catch (\Exception $e) {
             return false;
         }
