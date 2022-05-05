@@ -1,4 +1,5 @@
 <?php
+require_once "../vendor/autoload.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\key;
@@ -21,7 +22,7 @@ class authentication
     function decode($token)
     {
         try {
-            return json_decode(json_encode(JWT::decode($token, new Key($this->key, 'HS512'))), true);
+            return json_decode(json_encode(JWT::decode($token, new Key("hash('sha512', 'qeyeedoc')", 'HS512'))), true);
         } catch (\Exception $e) {
             return false;
         }

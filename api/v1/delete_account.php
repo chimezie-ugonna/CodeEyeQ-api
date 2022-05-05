@@ -7,7 +7,6 @@ require_once "../models/database.php";
 require_once "../models/login_info.php";
 require_once "../models/users.php";
 require_once "../models/response.php";
-require_once "../vendor/autoload.php";
 require_once "../models/authentication.php";
 
 $database = new database();
