@@ -6,7 +6,7 @@ use Firebase\JWT\key;
 
 class authentication
 {
-    private $key = "hash('sha512', 'qeyeedoc')";
+    private $key = "qeyeedoc";
 
     function encode($user_id)
     {
