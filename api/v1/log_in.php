@@ -9,14 +9,16 @@ require_once "../models/login_info.php";
 require_once "../models/users.php";
 require_once "../models/response.php";
 require_once "../models/authentication.php";
+require_once "../../vendor/autoload.php";
+Dotenv\Dotenv::createImmutable('../../')->load();
 
 $database = new database();
 $connection = $database->connect();
+$response = new response();
 if ($connection != null) {
     $login_info = new login_info($connection);
     $users = new users($connection);
     $data_security = new data_security();
-    $response = new response();
     $authentication = new authentication();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {

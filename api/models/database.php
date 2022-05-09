@@ -1,13 +1,24 @@
 <?php
+
 class database
 {
-    private $host = "ec2-44-194-54-186.compute-1.amazonaws.com";
-    private $port = "5432";
-    private $db_name = "dco8bgoaljvb7";
-    private $user = "uaqteoyzlwegvo";
-    private $password = "b210289ab147c6c6c2ff023fc8b91a61cd29708140f2b06e9c9dbaf06da94e42";
-    private $sslmode = "require";
+    private $host;
+    private $port;
+    private $db_name;
+    private $user;
+    private $password;
+    private $sslmode;
     private $connection;
+
+    function __construct()
+    {
+        $this->host = $_SERVER["DB_HOST"];
+        $this->port = $_SERVER["DB_PORT"];
+        $this->db_name = $_SERVER["DB_NAME"];
+        $this->user = $_SERVER["DB_USER"];
+        $this->password = $_SERVER["DB_PASSWORD"];
+        $this->sslmode = $_SERVER["SSL_MODE"];
+    }
 
     public function connect()
     {

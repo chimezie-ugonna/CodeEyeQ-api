@@ -9,14 +9,16 @@ require_once "../models/users.php";
 require_once "../models/login_info.php";
 require_once "../models/response.php";
 require_once "../models/authentication.php";
+require_once "../../vendor/autoload.php";
+Dotenv\Dotenv::createImmutable('../../')->load();
 
 $database = new database();
 $connection = $database->connect();
+$response = new response();
 if ($connection != null) {
     $users = new users($connection);
     $login_info = new login_info($connection);
     $data_security = new data_security();
-    $response = new response();
     $authentication = new authentication();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
@@ -30,12 +32,7 @@ if ($connection != null) {
         $os_version = "";
         if ($_SERVER["CONTENT_TYPE"] == "application/json") {
             $data = json_decode(file_get_contents("php://input"), true);
-            if (isset($data)$data = $authentication->decode($token);
-                if (isset($data["user_id"])) {
-                    
-                } else {
-                    $response->send(401, "Bearer token is invalid.");
-                } && $data["user_id"] != "" && isset($data["full_name"]) && $data["full_name"] != "" && isset($data["email"]) && $data["email"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
+            if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "" && isset($data["full_name"]) && $data["full_name"] != "" && isset($data["email"]) && $data["email"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
                 $user_id  =  addslashes($data["user_id"]);
                 $device_token  =  addslashes($data["device_token"]);
                 $full_name  =  addslashes($data["full_name"]);

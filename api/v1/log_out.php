@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Allow-Methods: DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
 require_once "../models/database.php";
@@ -8,12 +8,15 @@ require_once "../models/login_info.php";
 require_once "../models/response.php";
 require_once "../models/users.php";
 require_once "../models/authentication.php";
+require_once "../vendor/autoload.php";
+require_once "../../vendor/autoload.php";
+Dotenv\Dotenv::createImmutable('../../')->load();
 
 $database = new database();
 $connection = $database->connect();
+$response = new response();
 if ($connection != null) {
     $login_info = new login_info($connection);
-    $response = new response();
     $users = new users($connection);
     $authentication = new authentication();
 
@@ -22,7 +25,7 @@ if ($connection != null) {
             list($type, $token) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
             if (strcasecmp($type, "Bearer") == 0) {
                 $data = $authentication->decode($token);
-                if ($data != false) {
+                if ($data != false && isset($data["user_id"])) {
                     $user_id = $data["user_id"];
                     $statement = $users->read($user_id);
                     if ($statement != null) {

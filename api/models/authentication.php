@@ -1,12 +1,16 @@
 <?php
-require_once "../vendor/autoload.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\key;
 
 class authentication
 {
-    private $key = "qeyeedoc";
+    private $key;
+
+    function __construct()
+    {
+        $this->key = $_SERVER["TOKEN_KEY"];
+    }
 
     function encode($user_id)
     {
@@ -22,8 +26,9 @@ class authentication
     function decode($token)
     {
         try {
-            JWT::decode($token, new Key($this->key, 'HS512'));
+            return (array) (JWT::decode($token, new Key($this->key, 'HS512')));
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
     }

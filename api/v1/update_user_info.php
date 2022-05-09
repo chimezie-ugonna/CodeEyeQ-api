@@ -8,13 +8,16 @@ require_once "../models/data_security.php";
 require_once "../models/users.php";
 require_once "../models/response.php";
 require_once "../models/authentication.php";
+require_once "../vendor/autoload.php";
+require_once "../../vendor/autoload.php";
+Dotenv\Dotenv::createImmutable('../../')->load();
 
 $database = new database();
 $connection = $database->connect();
+$response = new response();
 if ($connection != null) {
     $users = new users($connection);
     $data_security = new data_security();
-    $response = new response();
     $authentication = new authentication();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,7 +25,7 @@ if ($connection != null) {
             list($type, $token) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
             if (strcasecmp($type, "Bearer") == 0) {
                 $data = $authentication->decode($token);
-                if ($data != false) {
+                if ($data != false && isset($data["user_id"])) {
                     $user_id = $data["user_id"];
                     $statement = $users->read($user_id);
                     if ($statement != null) {
