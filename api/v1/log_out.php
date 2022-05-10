@@ -36,19 +36,19 @@ if ($connection != null) {
                                 $response->send(500, "Log out failed.");
                             }
                         } else {
-                            $response->send(401, "Unauthorized access, user does not exist.");
+                            $response->send(401, "User does not exist.");
                         }
                     } else {
                         $response->send(500, "Authentication failed.");
                     }
                 } else {
-                    $response->send(401, "Bearer token is invalid.");
+                    $response->send(401, "Unauthorized access, bearer token is invalid.");
                 }
             } else {
-                $response->send(401, "Bearer token is required.");
+                $response->send(401, "Unauthorized access, bearer token is required.");
             }
         } else {
-            $response->send(401, "Unauthorized access, token is required.");
+            $response->send(401, "Unauthorized access, bearer token is required.");
         }
     } else {
         $response->send(400, "Proper request method was not used.");
