@@ -59,26 +59,20 @@ if ($connection != null) {
             $statement = $users->read($user_id);
             if ($statement != null) {
                 if ($statement->rowCount() > 0) {
-                    ini_set('display_errors', 1);
-                    error_reporting(E_ALL);
-                    try {
-                        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                            $theme = $row["theme"];
-                            $token = $authentication->encode($user_id);
-    
-                            if ($login_info->delete($user_id)) {
-                                if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
-                                    $response->send(200, "Log in successful.", array("theme" => $theme, "token" => $token));
-                                } else {
-                                    $response->send(500, "Log in failed.");
-                                }
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        $theme = $data_security->decrypt($row["decryption_key"], $row["decryption_iv"], $row["theme"]);
+                        $token = $authentication->encode($user_id);
+
+                        if ($login_info->delete($user_id)) {
+                            if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
+                                $response->send(200, "Log in successful.", array("theme" => $theme, "token" => $token));
                             } else {
                                 $response->send(500, "Log in failed.");
                             }
-                            break;
+                        } else {
+                            $response->send(500, "Log in failed.");
                         }
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
+                        break;
                     }
                 } else {
                     $response->send(404, "Log in failed because user does not exist.");
