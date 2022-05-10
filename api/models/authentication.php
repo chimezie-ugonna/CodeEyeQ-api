@@ -1,8 +1,4 @@
 <?php
-
-use Firebase\JWT\JWT;
-use Firebase\JWT\key;
-
 class authentication
 {
     private $key;
