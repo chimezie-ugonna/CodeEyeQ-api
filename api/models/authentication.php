@@ -16,13 +16,13 @@ class authentication
             'iat' => time(),
             'user_id' => $user_id
         ];
-        return JWT::encode($payload, $this->key, 'HS512');
+        return Firebase\JWT\JWT::encode($payload, $this->key, 'HS512');
     }
 
     function decode($token)
     {
         try {
-            return (array) (JWT::decode($token, new Key($this->key, 'HS512')));
+            return (array) (Firebase\JWT\JWT::decode($token, new Firebase\JWT\key($this->key, 'HS512')));
         } catch (\Exception $e) {
             echo $e;
             return false;

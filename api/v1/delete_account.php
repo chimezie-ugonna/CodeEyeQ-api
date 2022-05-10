@@ -7,8 +7,6 @@ require_once "../models/database.php";
 require_once "../models/login_info.php";
 require_once "../models/users.php";
 require_once "../models/response.php";
-use Firebase\JWT\JWT;
-use Firebase\JWT\key;
 require_once "../models/authentication.php";
 require_once "../vendor/autoload.php";
 require_once "../../vendor/autoload.php";
