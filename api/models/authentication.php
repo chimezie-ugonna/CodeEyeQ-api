@@ -27,8 +27,7 @@ class authentication
     {
         try {
             return (array) (JWT::decode($token, new Key($this->token_key, 'HS512')));
-        } catch (\Exception $e) {
-            echo $e;
+        } catch (\Exception) {
             return false;
         }
     }
