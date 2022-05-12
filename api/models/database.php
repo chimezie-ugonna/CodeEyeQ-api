@@ -12,12 +12,12 @@ class database
 
     function __construct()
     {
-        $this->host = $_SERVER["DB_HOST"];
-        $this->port = $_SERVER["DB_PORT"];
-        $this->db_name = $_SERVER["DB_NAME"];
-        $this->user = $_SERVER["DB_USER"];
-        $this->password = $_SERVER["DB_PASSWORD"];
-        $this->sslmode = $_SERVER["SSL_MODE"];
+        $this->host = getenv("DB_HOST");
+        $this->port = getenv("DB_PORT");
+        $this->db_name = getenv("DB_NAME");
+        $this->user = getenv("DB_USER");
+        $this->password = getenv("DB_PASSWORD");
+        $this->sslmode = getenv("SSL_MODE");
     }
 
     public function connect()

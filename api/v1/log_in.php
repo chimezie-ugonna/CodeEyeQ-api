@@ -12,10 +12,8 @@ try {
     require_once "../models/users.php";
     require_once "../models/response.php";
     require_once "../models/authentication.php";
-    require_once "../vendor/autoload.php";
     require_once "../../vendor/autoload.php";
-    Dotenv\Dotenv::createImmutable('../../')->load();
-    
+
     $database = new database();
     $connection = $database->connect();
     $response = new response();
@@ -24,7 +22,7 @@ try {
         $users = new users($connection);
         $data_security = new data_security();
         $authentication = new authentication();
-    
+
         if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
             $user_id = "";
             $device_token = "";
@@ -52,20 +50,20 @@ try {
                     $os_version  =  addslashes($_POST["os_version"]);
                 }
             }
-    
+
             if ($user_id != "" && $device_token != "" && $device_brand != "" && $device_model != "" && $app_version != "" && $os_version != "") {
                 $device_brand = $data_security->encrypt($device_brand);
                 $device_model = $data_security->encrypt($device_model);
                 $app_version = $data_security->encrypt($app_version);
                 $os_version = $data_security->encrypt($os_version);
-    
+
                 $statement = $users->read($user_id);
                 if ($statement != null) {
                     if ($statement->rowCount() > 0) {
                         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                             $theme = $data_security->decrypt($row["decryption_key"], $row["decryption_iv"], $row["theme"]);
                             $token = $authentication->encode($user_id);
-    
+
                             if ($login_info->delete($user_id)) {
                                 if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
                                     $response->send(200, "Log in successful.", array("theme" => $theme, "token" => $token));

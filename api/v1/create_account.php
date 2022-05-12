@@ -9,9 +9,7 @@ require_once "../models/users.php";
 require_once "../models/login_info.php";
 require_once "../models/response.php";
 require_once "../models/authentication.php";
-require_once "../vendor/autoload.php";
 require_once "../../vendor/autoload.php";
-Dotenv\Dotenv::createImmutable('../../')->load();
 
 $database = new database();
 $connection = $database->connect();

@@ -9,7 +9,7 @@ class authentication
 
     function __construct()
     {
-        $this->token_key = $_SERVER["TOKEN_KEY"];
+        $this->token_key = getenv("TOKEN_KEY");
     }
 
     function encode($user_id)
