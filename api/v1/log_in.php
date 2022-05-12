@@ -3,89 +3,95 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once "../models/database.php";
-require_once "../models/data_security.php";
-require_once "../models/login_info.php";
-require_once "../models/users.php";
-require_once "../models/response.php";
-require_once "../models/authentication.php";
-require_once "../vendor/autoload.php";
-require_once "../../vendor/autoload.php";
-Dotenv\Dotenv::createImmutable('../../')->load();
-
-$database = new database();
-$connection = $database->connect();
-$response = new response();
-if ($connection != null) {
-    $login_info = new login_info($connection);
-    $users = new users($connection);
-    $data_security = new data_security();
-    $authentication = new authentication();
-
-    if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
-        $user_id = "";
-        $device_token = "";
-        $device_brand = "";
-        $device_model = "";
-        $app_version = "";
-        $os_version = "";
-        if ($_SERVER["CONTENT_TYPE"] == "application/json") {
-            $data = json_decode(file_get_contents("php://input"), true);
-            if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
-                $user_id  =  addslashes($data["user_id"]);
-                $device_token  =  addslashes($data["device_token"]);
-                $device_brand  =  addslashes($data["device_brand"]);
-                $device_model  =  addslashes($data["device_model"]);
-                $app_version  =  addslashes($data["app_version"]);
-                $os_version  =  addslashes($data["os_version"]);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+try {
+    require_once "../models/database.php";
+    require_once "../models/data_security.php";
+    require_once "../models/login_info.php";
+    require_once "../models/users.php";
+    require_once "../models/response.php";
+    require_once "../models/authentication.php";
+    require_once "../vendor/autoload.php";
+    require_once "../../vendor/autoload.php";
+    Dotenv\Dotenv::createImmutable('../../')->load();
+    
+    $database = new database();
+    $connection = $database->connect();
+    $response = new response();
+    if ($connection != null) {
+        $login_info = new login_info($connection);
+        $users = new users($connection);
+        $data_security = new data_security();
+        $authentication = new authentication();
+    
+        if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST") {
+            $user_id = "";
+            $device_token = "";
+            $device_brand = "";
+            $device_model = "";
+            $app_version = "";
+            $os_version = "";
+            if ($_SERVER["CONTENT_TYPE"] == "application/json") {
+                $data = json_decode(file_get_contents("php://input"), true);
+                if (isset($data) && isset($data["user_id"]) && $data["user_id"] != "" && isset($data["device_token"]) && $data["device_token"] != "" && isset($data["device_brand"]) && $data["device_brand"] != "" && isset($data["device_model"]) && $data["device_model"] != "" && isset($data["app_version"]) && $data["app_version"] != "" && isset($data["os_version"]) && $data["os_version"] != "") {
+                    $user_id  =  addslashes($data["user_id"]);
+                    $device_token  =  addslashes($data["device_token"]);
+                    $device_brand  =  addslashes($data["device_brand"]);
+                    $device_model  =  addslashes($data["device_model"]);
+                    $app_version  =  addslashes($data["app_version"]);
+                    $os_version  =  addslashes($data["os_version"]);
+                }
+            } else {
+                if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {
+                    $user_id  =  addslashes($_POST["user_id"]);
+                    $device_token  =  addslashes($_POST["device_token"]);
+                    $device_brand  =  addslashes($_POST["device_brand"]);
+                    $device_model  =  addslashes($_POST["device_model"]);
+                    $app_version  =  addslashes($_POST["app_version"]);
+                    $os_version  =  addslashes($_POST["os_version"]);
+                }
             }
-        } else {
-            if (isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['device_token']) && $_POST['device_token'] != "" && isset($_POST['device_brand']) && $_POST['device_brand'] != "" && isset($_POST['device_model']) && $_POST['device_model'] != "" && isset($_POST['app_version']) && $_POST['app_version'] != "" && isset($_POST['os_version']) && $_POST['os_version'] != "") {
-                $user_id  =  addslashes($_POST["user_id"]);
-                $device_token  =  addslashes($_POST["device_token"]);
-                $device_brand  =  addslashes($_POST["device_brand"]);
-                $device_model  =  addslashes($_POST["device_model"]);
-                $app_version  =  addslashes($_POST["app_version"]);
-                $os_version  =  addslashes($_POST["os_version"]);
-            }
-        }
-
-        if ($user_id != "" && $device_token != "" && $device_brand != "" && $device_model != "" && $app_version != "" && $os_version != "") {
-            $device_brand = $data_security->encrypt($device_brand);
-            $device_model = $data_security->encrypt($device_model);
-            $app_version = $data_security->encrypt($app_version);
-            $os_version = $data_security->encrypt($os_version);
-
-            $statement = $users->read($user_id);
-            if ($statement != null) {
-                if ($statement->rowCount() > 0) {
-                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                        $theme = $data_security->decrypt($row["decryption_key"], $row["decryption_iv"], $row["theme"]);
-                        $token = $authentication->encode($user_id);
-
-                        if ($login_info->delete($user_id)) {
-                            if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
-                                $response->send(200, "Log in successful.", array("theme" => $theme, "token" => $token));
+    
+            if ($user_id != "" && $device_token != "" && $device_brand != "" && $device_model != "" && $app_version != "" && $os_version != "") {
+                $device_brand = $data_security->encrypt($device_brand);
+                $device_model = $data_security->encrypt($device_model);
+                $app_version = $data_security->encrypt($app_version);
+                $os_version = $data_security->encrypt($os_version);
+    
+                $statement = $users->read($user_id);
+                if ($statement != null) {
+                    if ($statement->rowCount() > 0) {
+                        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                            $theme = $data_security->decrypt($row["decryption_key"], $row["decryption_iv"], $row["theme"]);
+                            $token = $authentication->encode($user_id);
+    
+                            if ($login_info->delete($user_id)) {
+                                if ($login_info->create($user_id, $device_token, $device_brand, $device_model, $app_version, $data_security->decryption_key, $data_security->decryption_iv, $os_version)) {
+                                    $response->send(200, "Log in successful.", array("theme" => $theme, "token" => $token));
+                                } else {
+                                    $response->send(500, "Log in failed.");
+                                }
                             } else {
                                 $response->send(500, "Log in failed.");
                             }
-                        } else {
-                            $response->send(500, "Log in failed.");
+                            break;
                         }
-                        break;
+                    } else {
+                        $response->send(404, "Log in failed because user does not exist.");
                     }
                 } else {
-                    $response->send(404, "Log in failed because user does not exist.");
+                    $response->send(500, "Log in failed.");
                 }
             } else {
-                $response->send(500, "Log in failed.");
+                $response->send(400, "All required parameters were not found.");
             }
         } else {
-            $response->send(400, "All required parameters were not found.");
+            $response->send(400, "Proper request method was not used.");
         }
     } else {
-        $response->send(400, "Proper request method was not used.");
+        $response->send(500, "Database connection failed.");
     }
-} else {
-    $response->send(500, "Database connection failed.");
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
