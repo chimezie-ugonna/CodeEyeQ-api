@@ -60,7 +60,7 @@ class UsersController extends Controller
         if (Users::find($request->request->get("user_id"))) {
             return response()->json([
                 "status" => true,
-                "message" => "User's data retrieved successfully.",
+                "message" => "User data retrieved successfully.",
                 "data" => Users::find($request->request->get("user_id"))
             ], 200);
         } else {
@@ -93,7 +93,7 @@ class UsersController extends Controller
             Users::find($request->request->get("user_id"))->update($request->all());
             return response()->json([
                 "status" => true,
-                "message" => "User's data updated successfully."
+                "message" => "User data updated successfully."
             ], 200);
         } else {
             return response()->json([

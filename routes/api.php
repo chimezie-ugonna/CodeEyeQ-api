@@ -20,16 +20,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([CheckHeaders::class, IncomingDataValidation::class, TokenValidation::class])->prefix("v1")->group(function () {
     //All user endpoints.
-    Route::post('/users/create', [UsersController::class, 'create']);
-    Route::get('/users/read', [UsersController::class, 'read']);
-    Route::get('/users/read_all', [UsersController::class, 'read_all']);
-    Route::put('/users/update', [UsersController::class, 'update']);
-    Route::delete('/users/delete', [UsersController::class, 'delete']);
+    Route::controller(UsersController::class)->group(function () {
+        Route::post("/users/create", "create");
+        Route::get("/users/read", "read");
+        Route::get("/users/read_all", "read_all");
+        Route::put("/users/update", "update");
+        Route::delete("/users/delete", "delete");
+    });
 
     //All login endpoints.
-    Route::post('/logins/create', [LoginsController::class, 'create']);
-    Route::get('/logins/read', [LoginsController::class, 'read']);
-    Route::get('/logins/read_all', [LoginsController::class, 'read_all']);
-    Route::put('/logins/update', [LoginsController::class, 'update']);
-    Route::delete('/logins/delete', [LoginsController::class, 'delete']);
+    Route::controller(LoginsController::class)->group(function () {
+        Route::post("/logins/create", "create");
+        Route::get("/logins/read", "read");
+        Route::get("/logins/read_all", "read_all");
+        Route::put("/logins/update", "update");
+        Route::delete("/logins/delete", "delete");
+    });
 });

@@ -19,7 +19,7 @@ class TokenValidation
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->path() != "api/v1/users/create" || $request->path() != "api/v1/logins/create") {
+        if ($request->path() != "api/v1/users/create" && $request->path() != "api/v1/logins/create") {
             if ($request->bearerToken() != "") {
                 $auth = new Authentication();
                 $data = $auth->decode($request->bearerToken());
