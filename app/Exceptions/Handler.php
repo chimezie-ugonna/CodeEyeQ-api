@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+/*use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;*/
 
 class Handler extends ExceptionHandler
 {
@@ -31,9 +34,7 @@ class Handler extends ExceptionHandler
      * @var array<int, string>
      */
     protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
+        //
     ];
 
     /**
@@ -43,8 +44,13 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        /*$this->renderable(function (NotFoundResourceException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    "status" => false,
+                    "message" => "User not found."
+                ], 404);
+            }
+        });*/
     }
 }
