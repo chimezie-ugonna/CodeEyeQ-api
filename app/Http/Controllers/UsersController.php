@@ -10,22 +10,18 @@ class UsersController extends Controller
 {
     public function create(Request $request)
     {
-        $full_name_split = explode(" ", $request->request->get("full_name"));
-        $first_name = $full_name_split[0];
-        $ln = "";
-        if (count($full_name_split) > 1) {
-            for ($i = 1; $i < count($full_name_split); $i++) {
-                if ($i == 1) {
-                    $ln = $full_name_split[$i];
-                } else {
-                    $ln = $ln . " " . $full_name_split[$i];
-                }
+        array_filter($request->all(), function ($array) {
+            if ($array != null && $array != "null") {
+                return true;
+            } else {
+                return false;
             }
-        }
-        if ($ln != "") {
-            $last_name = $ln;
-        } else {
-            $last_name = "";
+        });
+        $full_name_split = explode(" ", $request->request->get("full_name"), 2);
+        $first_name = $full_name_split[0];
+        $last_name = "";
+        if (count($full_name_split) > 1) {
+            $last_name = $full_name_split[1];
         }
         $request->request->add([
             "first_name" => $first_name,
@@ -90,6 +86,26 @@ class UsersController extends Controller
     public function update(Request $request)
     {
         if (Users::find($request->request->get("user_id"))) {
+            array_filter($request->all(), function ($array) {
+                if ($array != null && $array != "null") {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+            if ($request->request->has("full_name")) {
+                $full_name_split = explode(" ", $request->request->get("full_name"), 2);
+                $first_name = $full_name_split[0];
+                $last_name = "";
+                if (count($full_name_split) > 1) {
+                    $last_name = $full_name_split[1];
+                }
+                $request->request->add([
+                    "first_name" => $first_name,
+                    "last_name" => $last_name
+                ]);
+            }
             Users::find($request->request->get("user_id"))->update($request->all());
             return response()->json([
                 "status" => true,
