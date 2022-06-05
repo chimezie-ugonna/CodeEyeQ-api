@@ -10,7 +10,8 @@ class UsersController extends Controller
 {
     public function create(Request $request)
     {
-        array_filter($request->all(), function ($array) {
+        $array = $request->all();
+        array_filter($array, function ($array) {
             if ($array != null && $array != "null") {
                 return true;
             } else {
@@ -86,7 +87,8 @@ class UsersController extends Controller
     public function update(Request $request)
     {
         if (Users::find($request->request->get("user_id"))) {
-            array_filter($request->all(), function ($array) {
+            $array = $request->all();
+            array_filter($array, function ($array) {
                 if ($array != null && $array != "null") {
                     return true;
                 } else {
