@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Logins;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use App\Custom\Authentication;
 
@@ -17,16 +18,23 @@ class LoginsController extends Controller
             "app_version" => request()->header("app_version"),
             "os_version" => request()->header("os_version")
         ]);
-        $log = Logins::updateOrCreate(["user_id" => $request->request->get("user_id"), "device_token" => $request->request->get("device_token")], $request->all());
-        $auth = new Authentication();
-        return response()->json([
-            "status" => true,
-            "message" => "User logged in successfully.",
-            "data" => [
-                "theme" => $log->users->theme,
-                "token" => $auth->encode($request->request->get("user_id"))
-            ]
-        ], 200);
+        if (Users::find($request->request->get("user_id"))) {
+            $log = Logins::updateOrCreate(["user_id" => $request->request->get("user_id"), "device_token" => $request->request->get("device_token")], $request->all());
+            $auth = new Authentication();
+            return response()->json([
+                "status" => true,
+                "message" => "User logged in successfully.",
+                "data" => [
+                    "theme" => $log->users->theme,
+                    "token" => $auth->encode($request->request->get("user_id"))
+                ]
+            ], 200);
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "User not found."
+            ], 404);
+        }
     }
 
     public function read(Request $request)
