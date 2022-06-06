@@ -10,14 +10,6 @@ class UsersController extends Controller
 {
     public function create(Request $request)
     {
-        $array = $request->all();
-        array_filter($array, function ($array) {
-            if ($array != null && $array != "null") {
-                return true;
-            } else {
-                return false;
-            }
-        });
         $full_name_split = explode(" ", $request->request->get("full_name"), 2);
         $first_name = $full_name_split[0];
         $last_name = "";
@@ -87,15 +79,6 @@ class UsersController extends Controller
     public function update(Request $request)
     {
         if (Users::find($request->request->get("user_id"))) {
-            $array = $request->all();
-            array_filter($array, function ($array) {
-                if ($array != null && $array != "null") {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-
             if ($request->request->has("full_name")) {
                 $full_name_split = explode(" ", $request->request->get("full_name"), 2);
                 $first_name = $full_name_split[0];
