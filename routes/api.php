@@ -5,7 +5,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Middleware\CheckHeaders;
 use App\Http\Middleware\IncomingDataValidation;
 use App\Http\Middleware\TokenValidation;
-use Illuminate\Support\Facades\Route; 
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
