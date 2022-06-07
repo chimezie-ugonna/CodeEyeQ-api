@@ -10,11 +10,14 @@ class UsersController extends Controller
 {
     public function create(Request $request)
     {
-        $full_name_split = explode(" ", $request->request->get("full_name"), 2);
-        $first_name = $full_name_split[0];
+        $first_name = "";
         $last_name = "";
-        if (count($full_name_split) > 1) {
-            $last_name = $full_name_split[1];
+        if ($request->request->has("full_name")) {
+            $full_name_split = explode(" ", $request->request->get("full_name"), 2);
+            $first_name = $full_name_split[0];
+            if (count($full_name_split) > 1) {
+                $last_name = $full_name_split[1];
+            }
         }
         $request->request->add([
             "first_name" => $first_name,

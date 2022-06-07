@@ -38,7 +38,7 @@ class IncomingDataValidation
         } else if ($request->isMethod("post") && $request->path() == "api/v1/users/create") {
             $request->validate([
                 "user_id" => ["bail", "required", "not_in:null"],
-                "full_name" => ["bail", "required", "not_in:null"],
+                "full_name" => ["bail", "not_in:null"],
                 "email" => ["bail", "required", "email", "not_in:null"]
             ]);
         } else if ($request->isMethod("post") && $request->path() == "api/v1/logins/create") {

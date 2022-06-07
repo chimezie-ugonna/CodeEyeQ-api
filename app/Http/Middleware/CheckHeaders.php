@@ -19,7 +19,7 @@ class CheckHeaders
         if ($request->hasHeader("Accept") == null || $request->header("Accept") != "application/json") {
             return response()->json([
                 "status" => false,
-                "message" => "Missing content-type 'application/json' header."
+                "message" => "Missing Accept 'application/json' header."
             ], 400)->throwResponse();
         } else if ($request->hasHeader("device-token") == null || $request->header("device-token") == "") {
             return response()->json([
