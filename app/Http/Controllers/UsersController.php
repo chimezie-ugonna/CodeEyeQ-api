@@ -109,18 +109,11 @@ class UsersController extends Controller
 
     public function delete(Request $request)
     {
-        if (Users::find($request->request->get("user_id"))) {
-            Users::find($request->request->get("user_id"))->logins()->delete();
-            Users::destroy($request->request->get("user_id"));
-            return response()->json([
-                "status" => true,
-                "message" => "User deleted successfully."
-            ], 200);
-        } else {
-            return response()->json([
-                "status" => false,
-                "message" => "User not found."
-            ], 404);
-        }
+        Users::find($request->request->get("user_id"))->logins()->delete();
+        Users::destroy($request->request->get("user_id"));
+        return response()->json([
+            "status" => true,
+            "message" => "User deleted successfully."
+        ], 200);
     }
 }

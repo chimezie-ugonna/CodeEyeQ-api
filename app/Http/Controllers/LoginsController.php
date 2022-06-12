@@ -87,17 +87,10 @@ class LoginsController extends Controller
 
     public function delete(Request $request)
     {
-        if (sizeof(Logins::where("user_id", $request->request->get("user_id"))->where("device_token", request()->header("device_token"))->get()) > 0) {
-            Logins::where("user_id", $request->request->get("user_id"))->where("device_token", request()->header("device_token"))->delete();
-            return response()->json([
-                "status" => true,
-                "message" => "User logged out successfully."
-            ], 200);
-        } else {
-            return response()->json([
-                "status" => false,
-                "message" => "Login not found."
-            ], 404);
-        }
+        Logins::where("user_id", $request->request->get("user_id"))->where("device_token", request()->header("device_token"))->delete();
+        return response()->json([
+            "status" => true,
+            "message" => "User logged out successfully."
+        ], 200);
     }
 }
