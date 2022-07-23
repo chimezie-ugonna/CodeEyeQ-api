@@ -46,6 +46,18 @@ class CheckHeaders
                 "status" => false,
                 "message" => "The os-version header is missing."
             ], 400)->throwResponse();
+        } else if ($request->hasHeader("theme") == null) {
+            return response()->json([
+                "status" => false,
+                "message" => "The theme header is missing."
+            ], 400)->throwResponse();
+        } else if ($request->hasHeader("theme") != null) {
+            if ($request->header("theme") != "system" || $request->header("theme") != "light" || $request->header("theme") != "dark") {
+                return response()->json([
+                    "status" => false,
+                    "message" => "The theme header is invalid."
+                ], 400)->throwResponse();
+            }
         }
         return $next($request);
     }

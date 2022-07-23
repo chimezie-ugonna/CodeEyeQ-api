@@ -32,6 +32,7 @@ class TokenValidation
                         ], 401);
                     } else {
                         $request->request->add(["user_id" => $user_id]);
+                        Users::where("user_id", $user_id)->update(["theme" => $request->header("theme")]);
                         Logins::where("user_id", $user_id)->where("device_token", $request->header("device_token"))->update([
                             "device_brand" => $request->header("device_brand"),
                             "device_model" => $request->header("device_model"),
