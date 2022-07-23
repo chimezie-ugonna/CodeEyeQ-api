@@ -46,17 +46,19 @@ class CheckHeaders
                 "status" => false,
                 "message" => "The os-version header is missing."
             ], 400)->throwResponse();
-        } else if ($request->hasHeader("theme") == null && $request->path() != "api/v1/users/create" || $request->hasHeader("theme") == null && $request->path() != "api/v1/logins/create") {
-            return response()->json([
-                "status" => false,
-                "message" => "The theme header is missing."
-            ], 400)->throwResponse();
-        } else if ($request->hasHeader("theme") != null && $request->path() != "api/v1/users/create" || $request->hasHeader("theme") != null && $request->path() != "api/v1/logins/create") {
-            if ($request->header("theme") != "system" || $request->header("theme") != "light" || $request->header("theme") != "dark") {
+        } else if ($request->path() != "api/v1/users/create" && $request->path() != "api/v1/logins/create") {
+            if ($request->hasHeader("theme") == null) {
                 return response()->json([
                     "status" => false,
-                    "message" => "The theme header is invalid."
+                    "message" => "The theme header is missing."
                 ], 400)->throwResponse();
+            } else if ($request->hasHeader("theme") != null) {
+                if ($request->header("theme") != "system" || $request->header("theme") != "light" || $request->header("theme") != "dark") {
+                    return response()->json([
+                        "status" => false,
+                        "message" => "The theme header is invalid."
+                    ], 400)->throwResponse();
+                }
             }
         }
         return $next($request);
