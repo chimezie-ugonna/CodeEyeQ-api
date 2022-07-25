@@ -41,7 +41,7 @@ class UsersController extends Controller
             "status" => true,
             "message" => "User created successfully.",
             "data" => [
-                "theme" => $request->request->get("theme"),
+                "theme" => Users::find($request->request->get("user_id"))->get("theme"),
                 "token" => $auth->encode($request->request->get("user_id"))
             ]
         ], 201);
